@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <script src="../assets/idioma-estudo.js"></script>
+  <link rel="alternate" hreflang="pt-BR" href="https://lariantunez.github.io/central-de-paineis/">
+  <link rel="alternate" hreflang="en" href="https://lariantunez.github.io/central-de-paineis/en/">
+  <link rel="alternate" hreflang="es" href="https://lariantunez.github.io/central-de-paineis/es/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Central de Paneles · Estudio de caso</title>
+  <meta name="description" content="Estudio de caso: portal que reúne los paneles de la empresa en una sola página, con un área administrativa para registrar y editar las tarjetas. Versión estática publicada con GitHub Actions, con datos ficticios.">
+  <meta property="og:title" content="Central de Paneles · una puerta de entrada a todos los paneles">
+  <meta property="og:description" content="Tarjetas generadas a partir de un JSON, administración sin tocar el código y despliegue automático en GitHub Pages.">
+  <meta property="og:image" content="../assets/central-home.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/estudo.css">
+  <style>
+    /* Identidade da Central de Painéis: azul-céu e lilás sobre azul-ardósia. */
+    :root { --accent: #38bdf8; --accent-2: #38bdf8; --on-accent: #0f172a; --accent-wash: rgba(56, 189, 248, 0.1); --violet: #a78bfa; }
+    :root[data-theme="light"] { --accent: #0369a1; --accent-2: #0369a1; --on-accent: #fff; --accent-wash: rgba(3, 105, 161, 0.09); --violet: #6d4fc2; }
+    @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --accent: #0369a1; --accent-2: #0369a1; --on-accent: #fff; --accent-wash: rgba(3, 105, 161, 0.09); --violet: #6d4fc2; } }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <div class="wrap">
+      <a class="marca" href="#inicio"><i></i>Central de Paneles</a>
+      <nav>
+        <a class="opcional" href="https://lariantunez.github.io/Vitrine-de-projetos/?lang=es">Portafolio</a>
+        <a class="opcional" href="#c00">Estudio de caso</a>
+        <a class="opcional" href="https://github.com/lariantunez/central-de-paineis">Código</a>
+        <a href="../app/">Abrir la central</a>
+        <div class="idiomas" role="group" aria-label="Idioma"><a href="../?lang=pt" data-idioma="pt" hreflang="pt-BR">PT</a><a href="../en/" data-idioma="en" hreflang="en">EN</a><a href="./" data-idioma="es" hreflang="es" aria-current="true">ES</a></div>
+        <button class="btn-tema" id="tema" type="button" aria-label="Cambiar tema">☀</button>
+      </nav>
+      <span class="progresso"></span>
+    </div>
+  </header>
+
+  <main id="inicio">
+    <section class="abertura">
+      <div class="wrap">
+        <span class="selo-topo"><b>●</b> Proyecto en producción · demostración con datos ficticios</span>
+        <h1>Una puerta de entrada a <em>todos los paneles</em>.</h1>
+        <p class="lead">Un portal que reúne los paneles de la empresa en una sola página de tarjetas. Cada tarjeta lleva a un panel, y la lista se mantiene desde un área administrativa: registrar, editar o eliminar un panel no requiere tocar el código.</p>
+        <div class="acoes">
+          <a class="btn primario" href="../app/">Abrir la central →</a>
+          <a class="btn" href="#c00">Leer el estudio de caso</a>
+        </div>
+        <div class="numeros">
+          <div><strong>4</strong><span>paneles registrados en el archivo de datos</span></div>
+          <div><strong>5</strong><span>campos describen cada panel</span></div>
+          <div><strong>5</strong><span>páginas HTML estáticas, sin servidor</span></div>
+          <div><strong>2</strong><span>colecciones guardadas en el navegador</span></div>
+          <div><strong>4</strong><span>pasos en el despliegue automático</span></div>
+        </div>
+        <figure class="vitrine">
+          <div class="barra-janela"><i></i><i></i><i></i><span>app/ · Central de Paneles (datos ficticios)</span></div>
+          <img src="../assets/central-home.jpg" alt="Inicio de la Central de Paneles: título, enlace para administrar los paneles y cuatro tarjetas, cada una con inicial, nombre, descripción y el enlace Acceder al panel" width="1440" height="900">
+        </figure>
+      </div>
+    </section>
+
+    <div class="wrap livro">
+      <aside class="indice" aria-label="Capítulos">
+        <p>Capítulos</p>
+        <ol>
+          <li><a href="#c00"><b>00</b>El desafío</a></li>
+          <li><a href="#c01"><b>01</b>Principios</a></li>
+          <li><a href="#c02"><b>02</b>Los datos</a></li>
+          <li><a href="#c03"><b>03</b>La página de inicio</a></li>
+          <li><a href="#c04"><b>04</b>Administración</a></li>
+          <li><a href="#c05"><b>05</b>Acceso</a></li>
+          <li><a href="#c06"><b>06</b>Panel demo</a></li>
+          <li><a href="#c07"><b>07</b>Despliegue</a></li>
+          <li><a href="#c08"><b>08</b>Producción y demo</a></li>
+        </ol>
+      </aside>
+
+      <div class="capitulos">
+        <!-- 00 -->
+        <section class="capitulo" id="c00">
+          <span class="rotulo-cap">00 · El desafío</span>
+          <h2>Muchos paneles, ningún lugar para encontrarlos.</h2>
+          <p>Cada panel nace como un proyecto aparte, con su propia dirección. Con el tiempo, los enlaces quedan dispersos entre mensajes, favoritos y correos, y quien necesita un número no sabe por dónde empezar. La Central de Paneles lo resuelve con <strong>una sola página</strong>, donde cada panel aparece como una tarjeta.</p>
+          <p class="destaque revelar">¿Dónde está el panel de aquel cliente? En la central, con nombre, descripción y un clic.</p>
+          <div class="grade g3 revelar">
+            <div class="cartao azul"><span class="num">ENCONTRAR</span><h4>Una página para todo</h4><p>Todos los paneles lado a lado, cada uno con nombre, una frase sobre lo que muestra y el enlace de acceso.</p></div>
+            <div class="cartao violeta"><span class="num">MANTENER</span><h4>Sin tocar el código</h4><p>Un panel nuevo entra por el área administrativa: nombre, descripción y URL. La página de inicio se arma sola.</p></div>
+            <div class="cartao verde"><span class="num">CONTROLAR</span><h4>Quién puede modificar</h4><p>La lista es pública para lectura; registrar, editar y eliminar paneles o administradores es tarea del área administrativa.</p></div>
+          </div>
+        </section>
+
+        <!-- 01 -->
+        <section class="capitulo" id="c01">
+          <span class="rotulo-cap">01 · Principios</span>
+          <h2>La página de inicio no sabe qué paneles existen.</h2>
+          <p>Solo lee una lista y dibuja una tarjeta para cada elemento. Esa separación guio el resto del proyecto:</p>
+          <div class="grade g2 revelar">
+            <div class="cartao"><span class="num">01</span><h4>Datos fuera de la pantalla</h4><p>Los paneles viven en una lista (<code>data/paineis.json</code>), no en el HTML. Agregar un panel es agregar un elemento.</p></div>
+            <div class="cartao"><span class="num">02</span><h4>Campos mínimos, el resto se deduce</h4><p>Sin inicial, la página de inicio usa la primera letra del nombre. Sin URL, la tarjeta apunta al panel de demostración de ese cliente.</p></div>
+            <div class="cartao"><span class="num">03</span><h4>La página nunca queda vacía</h4><p>Si el archivo de datos no carga, la página de inicio usa una lista de respaldo escrita en el propio código.</p></div>
+            <div class="cartao"><span class="num">04</span><h4>Nada real en la demostración</h4><p>Sin inicio de sesión, sin correo y sin base de datos. Las ediciones quedan solo en el navegador de quien prueba, y los administradores son ficticios.</p></div>
+          </div>
+        </section>
+
+        <!-- 02 -->
+        <section class="capitulo" id="c02">
+          <span class="rotulo-cap">02 · Los datos</span>
+          <h2>Cinco campos describen un panel.</h2>
+          <p>El archivo <code>data/paineis.json</code> es una lista simple. Cada panel tiene cinco campos, y solo el nombre es indispensable para que aparezca la tarjeta:</p>
+          <div class="tabela-rolagem revelar">
+            <table class="tabela">
+              <thead><tr><th>Campo</th><th>Qué guarda</th><th>Si está vacío</th></tr></thead>
+              <tbody>
+                <tr><td><code>id</code></td><td>Identificador del panel</td><td>En el registro, se genera con <code>crypto.randomUUID()</code></td></tr>
+                <tr><td><code>nome</code></td><td>Título de la tarjeta</td><td><span class="alerta">Obligatorio</span> en el formulario de administración</td></tr>
+                <tr><td><code>descricao</code></td><td>Una frase sobre lo que muestra el panel</td><td>La tarjeta muestra un texto predeterminado</td></tr>
+                <tr><td><code>url</code></td><td>Dirección del panel</td><td>Apunta a <code>painel-demo.html?cliente=&lt;id&gt;</code></td></tr>
+                <tr><td><code>inicial</code></td><td>Letra del ícono de la tarjeta</td><td>Primera letra del nombre, en mayúscula</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>La página de inicio busca la lista en tres lugares, en este orden, y se detiene en el primero que responda:</p>
+          <figure class="diagrama revelar">
+            <svg viewBox="0 0 960 360" role="img" aria-label="Orden de lectura: la administración guarda en el navegador; la página de inicio lee primero el navegador, luego el archivo JSON y, por último, la lista de respaldo; todo pasa por la normalización antes de convertirse en tarjeta">
+              <path class="liga forte" d="M280 69 H 355"/>
+              <path class="liga forte" d="M605 69 C 650 69, 650 150, 690 150"/>
+              <path class="liga" d="M605 179 C 650 179, 650 150, 690 150"/>
+              <path class="liga" d="M605 289 C 650 289, 650 150, 690 150"/>
+              <path class="liga forte" d="M810 179 V 260"/>
+              <g class="no apoio"><rect x="30" y="40" width="250" height="58" rx="10"/><text x="155" y="64" text-anchor="middle">admin.html</text><text class="sub" x="155" y="84" text-anchor="middle">registra, edita y elimina</text></g>
+              <g class="no fato"><rect x="355" y="40" width="250" height="58" rx="10"/><text x="480" y="64" text-anchor="middle">1.º · localStorage</text><text class="sub" x="480" y="84" text-anchor="middle">lista editada en este navegador</text></g>
+              <g class="no dim"><rect x="355" y="150" width="250" height="58" rx="10"/><text x="480" y="174" text-anchor="middle">2.º · data/paineis.json</text><text class="sub" x="480" y="194" text-anchor="middle">lista publicada en el sitio</text></g>
+              <g class="no"><rect x="355" y="260" width="250" height="58" rx="10"/><text x="480" y="284" text-anchor="middle">3.º · lista de respaldo</text><text class="sub" x="480" y="304" text-anchor="middle">escrita en el propio index.html</text></g>
+              <g class="no"><rect x="690" y="121" width="240" height="58" rx="10"/><text x="810" y="145" text-anchor="middle">normalizarPainel()</text><text class="sub" x="810" y="165" text-anchor="middle">completa inicial y URL</text></g>
+              <g class="no fato"><rect x="690" y="260" width="240" height="58" rx="10"/><text x="810" y="284" text-anchor="middle">tarjetas del inicio</text><text class="sub" x="810" y="304" text-anchor="middle">una por panel</text></g>
+            </svg>
+            <figcaption>La administración guarda en el navegador; la página de inicio da prioridad a esa versión, luego al JSON publicado y, por último, a la lista de respaldo.</figcaption>
+          </figure>
+        </section>
+
+        <!-- 03 -->
+        <section class="capitulo" id="c03">
+          <span class="rotulo-cap">03 · La página de inicio</span>
+          <h2>Una tarjeta por panel, armada al instante.</h2>
+          <p>La página de inicio es una sola página, con un título, el enlace a la administración y una cuadrícula que se ajusta al ancho de la pantalla (<code>auto-fit</code>, tarjetas de al menos 260 px). El JavaScript lee la lista y crea cada tarjeta:</p>
+          <div class="etapas revelar">
+            <div class="etapa"><div><h4>Carga la lista</h4><p>navegador, JSON o respaldo, en ese orden</p></div></div>
+            <div class="etapa"><div><h4>Completa lo que falte</h4><p>inicial a partir del nombre y URL del panel de demostración cuando no hay dirección</p></div></div>
+            <div class="etapa"><div><h4>Dibuja la tarjeta</h4><p>ícono con la inicial, nombre, descripción y “Acessar painel” (Acceder al panel)</p></div></div>
+            <div class="etapa"><div><h4>Decide cómo abrir</h4><p>los enlaces externos (<code>http</code> o <code>https</code>) se abren en una pestaña nueva, con <code>noopener noreferrer</code>; los enlaces internos se abren en la misma pestaña</p></div></div>
+          </div>
+          <div class="grade g2 revelar">
+            <div class="cartao azul"><h4>El aspecto de la central</h4><p>Fondo azul pizarra en degradado, tarjetas translúcidas con desenfoque e ícono en degradado de azul cielo a lila. Al pasar el mouse, la tarjeta sube y el borde se ilumina.</p></div>
+            <div class="cartao verde"><h4>Sin dependencias</h4><p>HTML, CSS y JavaScript puro, sin framework y sin etapa de build. Lo que está en el repositorio es exactamente lo que recibe el navegador.</p></div>
+          </div>
+        </section>
+
+        <!-- 04 -->
+        <section class="capitulo" id="c04">
+          <span class="rotulo-cap">04 · Administración</span>
+          <h2>Dos pestañas: paneles y administradores.</h2>
+          <p>El área administrativa concentra el mantenimiento de la central. En la demostración, todo lo que se modifica queda guardado en el <code>localStorage</code> en dos claves: <code>portfolio_paineis_publicados</code> y <code>portfolio_admins</code>.</p>
+          <div class="grade g2 revelar">
+            <div class="cartao azul"><span class="num">PESTAÑA PANELES</span><h4>Registro y edición en el mismo formulario</h4><p>Nombre, descripción y URL. “Editar” llena el formulario y cambia el botón a “Salvar alterações” (Guardar cambios); “Remover” (Eliminar) pide confirmación. Nombre y URL son obligatorios.</p></div>
+            <div class="cartao violeta"><span class="num">PESTAÑA ADMINISTRADORES</span><h4>Usuario, correo y fecha de creación</h4><p>Crear un administrador y, para cada uno, cambiar el nombre de usuario, el correo o la contraseña, o eliminarlo. Cada acción abre una ventana solo con los campos necesarios.</p></div>
+          </div>
+          <div class="grade g3 revelar">
+            <div class="cartao"><h4>Usuario principal</h4><p>Marcado con la etiqueta <strong>PAI</strong> (padre). El botón de eliminar queda desactivado para él.</p></div>
+            <div class="cartao"><h4>Contraseña simulada</h4><p>En la demostración, cambiar la contraseña solo confirma la acción en pantalla; no se guarda ninguna contraseña.</p></div>
+            <div class="cartao"><h4>Efecto inmediato</h4><p>Al volver a la página de inicio, las tarjetas ya reflejan lo que se registró, editó o eliminó.</p></div>
+          </div>
+          <div class="galeria revelar">
+            <figure><img src="../assets/central-admin.jpg" alt="Pestaña Paneles de la administración: formulario con nombre, descripción y URL y la tabla de paneles registrados con los botones Editar y Eliminar" loading="lazy" width="1440" height="900"><figcaption>Pestaña Paneles: formulario y lista con editar y eliminar.</figcaption></figure>
+            <figure><img src="../assets/central-admins.jpg" alt="Pestaña Administradores: tabla con usuario, correo, fecha de creación y acciones; el usuario principal tiene la etiqueta PAI" loading="lazy" width="1440" height="900"><figcaption>Pestaña Administradores: usuario principal con la etiqueta PAI.</figcaption></figure>
+          </div>
+        </section>
+
+        <!-- 05 -->
+        <section class="capitulo" id="c05">
+          <span class="rotulo-cap">05 · Acceso</span>
+          <h2>En el proyecto original, la puerta tiene llave.</h2>
+          <p>La versión publicada aquí es estática y abre la administración a cualquier visitante. En el proyecto original, el área administrativa está protegida por inicio de sesión y existe una página para restablecer la contraseña. La demostración mantuvo las pantallas y reemplazó lo que dependía de un servidor:</p>
+          <div class="revelar">
+            <div class="mudanca"><div class="antes"><b>Original</b>Administración detrás de un inicio de sesión.</div><div class="seta">→</div><div class="depois"><b>Demostración</b>Acceso libre, señalado en la parte superior de la pantalla como “Modo portfolio ACESSO LIVRE” (modo portafolio, acceso libre).</div></div>
+            <div class="mudanca"><div class="antes"><b>Original</b>Página para restablecer la contraseña.</div><div class="seta">→</div><div class="depois"><b>Demostración</b><code>reset-senha.html</code> avisa que la contraseña está desactivada y lleva directo a la administración.</div></div>
+            <div class="mudanca"><div class="antes"><b>Original</b>Administradores registrados con usuario, correo y contraseña.</div><div class="seta">→</div><div class="depois"><b>Demostración</b>Dos administradores ficticios, con correos de <code>exemplo.com</code>.</div></div>
+          </div>
+          <p class="destaque revelar">Mostrar cómo funciona sin exponer a quién lo usa: la demostración no guarda ningún dato real.</p>
+        </section>
+
+        <!-- 06 -->
+        <section class="capitulo" id="c06">
+          <span class="rotulo-cap">06 · Panel demo</span>
+          <h2>Un panel de ejemplo para cualquier tarjeta.</h2>
+          <p>Cuando un panel se registra sin URL, la tarjeta apunta a <code>painel-demo.html?cliente=&lt;nome&gt;</code>. Ese panel lee el nombre del cliente en la dirección, lo usa como título y arma un dashboard con números ficticios, sin servidor y sin base de datos.</p>
+          <div class="grade g4 revelar">
+            <div class="cartao azul"><h4>3 filtros</h4><p>Período (30, 60 o 90 días), canal y regional.</p></div>
+            <div class="cartao verde"><h4>4 indicadores</h4><p>Ingresos, pedidos, meta y archivos OK.</p></div>
+            <div class="cartao ambar"><h4>3 pestañas</h4><p>Ventas, metas y archivos, cada una con gráfico y tabla.</p></div>
+            <div class="cartao violeta"><h4>Gráficos en CSS</h4><p>Barras dibujadas con HTML y CSS, sin biblioteca de gráficos.</p></div>
+          </div>
+          <p>Los filtros funcionan de verdad: cada combinación aplica un multiplicador sobre la serie base, y los indicadores, gráficos y tablas se recalculan con cada cambio.</p>
+          <figure class="diagrama revelar">
+            <img src="../assets/central-painel-demo.jpg" alt="Panel de demostración: filtros de período, canal y regional, cuatro indicadores, pestañas Ventas, Metas y Archivos, gráfico de sell out por mes y tabla de regiones" loading="lazy" width="1440" height="900">
+            <figcaption>Panel de demostración abierto con <code>?cliente=demonstracao</code>.</figcaption>
+          </figure>
+        </section>
+
+        <!-- 07 -->
+        <section class="capitulo" id="c07">
+          <span class="rotulo-cap">07 · Despliegue</span>
+          <h2>Se envió a main, ya está en línea.</h2>
+          <p>La publicación en GitHub Pages la hace un workflow de GitHub Actions (<code>.github/workflows/pages.yml</code>). Se ejecuta con cada envío a la rama <code>main</code> o manualmente, y publica la carpeta completa del repositorio:</p>
+          <div class="etapas revelar">
+            <div class="etapa"><div><h4>Checkout</h4><p><code>actions/checkout@v4</code> descarga el repositorio</p></div></div>
+            <div class="etapa"><div><h4>Configura Pages</h4><p><code>actions/configure-pages@v5</code></p></div></div>
+            <div class="etapa"><div><h4>Empaqueta el sitio</h4><p><code>actions/upload-pages-artifact@v3</code>, con la raíz del repositorio como contenido</p></div></div>
+            <div class="etapa"><div><h4>Publica</h4><p><code>actions/deploy-pages@v4</code> devuelve la dirección de la página en el entorno <code>github-pages</code></p></div></div>
+          </div>
+          <div class="grade g3 revelar">
+            <div class="cartao"><h4>Permisos mínimos</h4><p>El workflow solo lee el contenido y escribe en Pages (<code>contents: read</code>, <code>pages: write</code>, <code>id-token: write</code>).</p></div>
+            <div class="cartao"><h4>Un despliegue a la vez</h4><p>El grupo de concurrencia <code>pages</code> evita dos publicaciones simultáneas, sin cancelar la que está en curso.</p></div>
+            <div class="cartao"><h4>Sin Jekyll, con 404</h4><p>El archivo <code>.nojekyll</code> publica los archivos tal como están, y el <code>404.html</code> lleva las direcciones antiguas al lugar correcto.</p></div>
+          </div>
+        </section>
+
+        <!-- 08 -->
+        <section class="capitulo" id="c08">
+          <span class="rotulo-cap">08 · Producción y demostración</span>
+          <h2>En producción, con inicio de sesión; aquí, en el navegador.</h2>
+          <div class="arquitetura revelar">
+            <div class="caixa"><span class="tag">GitHub</span><b>Repositorio</b><ul><li>páginas y <code>paineis.json</code></li><li>workflow de Pages</li></ul></div>
+            <div class="seta">→</div>
+            <div class="caixa"><span class="tag">GitHub Pages</span><b>Sitio estático</b><ul><li>estudio de caso en la raíz</li><li>central en <code>app/</code></li></ul></div>
+            <div class="seta">→</div>
+            <div class="caixa"><span class="tag">Navegador</span><b>Central</b><ul><li>tarjetas y administración</li><li>ediciones en el <code>localStorage</code></li></ul></div>
+          </div>
+          <p>Esta demostración tiene las mismas pantallas que el proyecto original: inicio con las tarjetas, administración con paneles y administradores, y el panel de ejemplo. Lo que cambió fue el acceso, que quedó libre, y el almacenamiento, que pasó al navegador. Las tarjetas llevan a los otros paneles del portafolio, también publicados con datos ficticios.</p>
+          <h3>Tecnologías</h3>
+          <div class="pilulas">
+            <span>HTML</span><span>CSS (grid, backdrop-filter)</span><span>JavaScript sin framework</span><span>Fetch API</span><span>localStorage</span><span>JSON</span><span>GitHub Actions</span><span>GitHub Pages</span>
+          </div>
+          <div class="encerramento revelar">
+            <span class="rotulo-cap">Pruébalo</span>
+            <h2>Registra un panel y mira cómo aparece la tarjeta en el inicio.</h2>
+            <p class="texto">Recorrido sugerido: abre la central, haz clic en “Administrar painéis” (Administrar paneles) y registra un panel solo con el nombre. Vuelve al inicio: la tarjeta nueva tiene la inicial calculada y abre el panel de demostración con ese nombre.</p>
+            <div class="acoes"><a class="btn primario" href="../app/">Abrir la central →</a><a class="btn" href="https://github.com/lariantunez/central-de-paineis">Ver el código</a></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span><strong>Larissa Antunez</strong> · Analytics &amp; Desarrollo</span>
+      <span>Proyecto en producción · demostración con datos ficticios</span>
+    </div>
+  </footer>
+  <script src="../assets/estudo.js"></script>
+</body>
+</html>

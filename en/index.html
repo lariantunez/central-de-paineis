@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="../assets/idioma-estudo.js"></script>
+  <link rel="alternate" hreflang="pt-BR" href="https://lariantunez.github.io/central-de-paineis/">
+  <link rel="alternate" hreflang="en" href="https://lariantunez.github.io/central-de-paineis/en/">
+  <link rel="alternate" hreflang="es" href="https://lariantunez.github.io/central-de-paineis/es/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Hub · Case study</title>
+  <meta name="description" content="Case study: a portal that gathers the company's dashboards on a single page, with an admin area to add and edit the cards. Static version published with GitHub Actions, using fictional data.">
+  <meta property="og:title" content="Dashboard Hub · one entry point for every dashboard">
+  <meta property="og:description" content="Cards generated from a JSON file, administration without touching the code, and automatic deployment to GitHub Pages.">
+  <meta property="og:image" content="../assets/central-home.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/estudo.css">
+  <style>
+    /* Identidade da Central de Painéis: azul-céu e lilás sobre azul-ardósia. */
+    :root { --accent: #38bdf8; --accent-2: #38bdf8; --on-accent: #0f172a; --accent-wash: rgba(56, 189, 248, 0.1); --violet: #a78bfa; }
+    :root[data-theme="light"] { --accent: #0369a1; --accent-2: #0369a1; --on-accent: #fff; --accent-wash: rgba(3, 105, 161, 0.09); --violet: #6d4fc2; }
+    @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --accent: #0369a1; --accent-2: #0369a1; --on-accent: #fff; --accent-wash: rgba(3, 105, 161, 0.09); --violet: #6d4fc2; } }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <div class="wrap">
+      <a class="marca" href="#inicio"><i></i>Dashboard Hub</a>
+      <nav>
+        <a class="opcional" href="https://lariantunez.github.io/Vitrine-de-projetos/?lang=en">Portfolio</a>
+        <a class="opcional" href="#c00">Case study</a>
+        <a class="opcional" href="https://github.com/lariantunez/central-de-paineis">Code</a>
+        <a href="../app/">Open the hub</a>
+        <div class="idiomas" role="group" aria-label="Language"><a href="../?lang=pt" data-idioma="pt" hreflang="pt-BR">PT</a><a href="./" data-idioma="en" hreflang="en" aria-current="true">EN</a><a href="../es/" data-idioma="es" hreflang="es">ES</a></div>
+        <button class="btn-tema" id="tema" type="button" aria-label="Toggle theme">☀</button>
+      </nav>
+      <span class="progresso"></span>
+    </div>
+  </header>
+
+  <main id="inicio">
+    <section class="abertura">
+      <div class="wrap">
+        <span class="selo-topo"><b>●</b> Project in production · demo with fictional data</span>
+        <h1>One entry point for <em>every dashboard</em>.</h1>
+        <p class="lead">A portal that gathers the company's dashboards on a single page of cards. Each card leads to a dashboard, and the list is maintained through an admin area: adding, editing, or removing a dashboard doesn't require touching the code.</p>
+        <div class="acoes">
+          <a class="btn primario" href="../app/">Open the hub →</a>
+          <a class="btn" href="#c00">Read the case study</a>
+        </div>
+        <div class="numeros">
+          <div><strong>4</strong><span>dashboards registered in the data file</span></div>
+          <div><strong>5</strong><span>fields describe each dashboard</span></div>
+          <div><strong>5</strong><span>static HTML pages, no server</span></div>
+          <div><strong>2</strong><span>collections saved in the browser</span></div>
+          <div><strong>4</strong><span>steps in the automatic deployment</span></div>
+        </div>
+        <figure class="vitrine">
+          <div class="barra-janela"><i></i><i></i><i></i><span>app/ · Dashboard Hub (fictional data)</span></div>
+          <img src="../assets/central-home.jpg" alt="Dashboard Hub home: title, link to manage the dashboards, and four cards, each with an initial, name, description, and the Open dashboard link" width="1440" height="900">
+        </figure>
+      </div>
+    </section>
+
+    <div class="wrap livro">
+      <aside class="indice" aria-label="Chapters">
+        <p>Chapters</p>
+        <ol>
+          <li><a href="#c00"><b>00</b>The challenge</a></li>
+          <li><a href="#c01"><b>01</b>Principles</a></li>
+          <li><a href="#c02"><b>02</b>The data</a></li>
+          <li><a href="#c03"><b>03</b>The home page</a></li>
+          <li><a href="#c04"><b>04</b>Administration</a></li>
+          <li><a href="#c05"><b>05</b>Access</a></li>
+          <li><a href="#c06"><b>06</b>Demo dashboard</a></li>
+          <li><a href="#c07"><b>07</b>Deployment</a></li>
+          <li><a href="#c08"><b>08</b>Production and demo</a></li>
+        </ol>
+      </aside>
+
+      <div class="capitulos">
+        <!-- 00 -->
+        <section class="capitulo" id="c00">
+          <span class="rotulo-cap">00 · The challenge</span>
+          <h2>Many dashboards, no place to find them.</h2>
+          <p>Each dashboard starts as a separate project with its own address. Over time, the links end up scattered across messages, bookmarks, and emails, and anyone who needs a number doesn't know where to start. The Dashboard Hub solves this with <strong>a single page</strong> where each dashboard appears as a card.</p>
+          <p class="destaque revelar">Where is that client's dashboard? In the hub, with a name, a description, and one click.</p>
+          <div class="grade g3 revelar">
+            <div class="cartao azul"><span class="num">FIND</span><h4>One page for everything</h4><p>All dashboards side by side, each with a name, a sentence about what it shows, and the access link.</p></div>
+            <div class="cartao violeta"><span class="num">MAINTAIN</span><h4>No code changes</h4><p>A new dashboard comes in through the admin area: name, description, and URL. The home page builds itself.</p></div>
+            <div class="cartao verde"><span class="num">CONTROL</span><h4>Who can make changes</h4><p>The list is publicly readable; adding, editing, and removing dashboards or administrators is a job for the admin area.</p></div>
+          </div>
+        </section>
+
+        <!-- 01 -->
+        <section class="capitulo" id="c01">
+          <span class="rotulo-cap">01 · Principles</span>
+          <h2>The home page doesn't know which dashboards exist.</h2>
+          <p>It just reads a list and draws a card for each item. That separation guided the rest of the project:</p>
+          <div class="grade g2 revelar">
+            <div class="cartao"><span class="num">01</span><h4>Data outside the page</h4><p>The dashboards live in a list (<code>data/paineis.json</code>), not in the HTML. Adding a dashboard means adding an item.</p></div>
+            <div class="cartao"><span class="num">02</span><h4>Minimal fields, the rest inferred</h4><p>Without an initial, the home page uses the first letter of the name. Without a URL, the card points to that client's demo dashboard.</p></div>
+            <div class="cartao"><span class="num">03</span><h4>The page is never empty</h4><p>If the data file fails to load, the home page uses a fallback list written into the code itself.</p></div>
+            <div class="cartao"><span class="num">04</span><h4>Nothing real in the demo</h4><p>No login, no email, and no database. Edits stay only in the tester's browser, and the administrators are fictional.</p></div>
+          </div>
+        </section>
+
+        <!-- 02 -->
+        <section class="capitulo" id="c02">
+          <span class="rotulo-cap">02 · The data</span>
+          <h2>Five fields describe a dashboard.</h2>
+          <p>The <code>data/paineis.json</code> file is a simple list. Each dashboard has five fields, and only the name is required for the card to appear:</p>
+          <div class="tabela-rolagem revelar">
+            <table class="tabela">
+              <thead><tr><th>Field</th><th>What it stores</th><th>If empty</th></tr></thead>
+              <tbody>
+                <tr><td><code>id</code></td><td>Dashboard identifier</td><td>Generated with <code>crypto.randomUUID()</code> on creation</td></tr>
+                <tr><td><code>nome</code></td><td>Card title</td><td><span class="alerta">Required</span> in the admin form</td></tr>
+                <tr><td><code>descricao</code></td><td>A sentence about what the dashboard shows</td><td>The card displays default text</td></tr>
+                <tr><td><code>url</code></td><td>Dashboard address</td><td>Points to <code>painel-demo.html?cliente=&lt;id&gt;</code></td></tr>
+                <tr><td><code>inicial</code></td><td>Letter on the card icon</td><td>First letter of the name, uppercase</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The home page looks for the list in three places, in this order, and stops at the first one that responds:</p>
+          <figure class="diagrama revelar">
+            <svg viewBox="0 0 960 360" role="img" aria-label="Read order: the admin area saves to the browser; the home page reads the browser first, then the JSON file, and finally the fallback list; everything goes through normalization before becoming a card">
+              <path class="liga forte" d="M280 69 H 355"/>
+              <path class="liga forte" d="M605 69 C 650 69, 650 150, 690 150"/>
+              <path class="liga" d="M605 179 C 650 179, 650 150, 690 150"/>
+              <path class="liga" d="M605 289 C 650 289, 650 150, 690 150"/>
+              <path class="liga forte" d="M810 179 V 260"/>
+              <g class="no apoio"><rect x="30" y="40" width="250" height="58" rx="10"/><text x="155" y="64" text-anchor="middle">admin.html</text><text class="sub" x="155" y="84" text-anchor="middle">adds, edits, and removes</text></g>
+              <g class="no fato"><rect x="355" y="40" width="250" height="58" rx="10"/><text x="480" y="64" text-anchor="middle">1st · localStorage</text><text class="sub" x="480" y="84" text-anchor="middle">list edited in this browser</text></g>
+              <g class="no dim"><rect x="355" y="150" width="250" height="58" rx="10"/><text x="480" y="174" text-anchor="middle">2nd · data/paineis.json</text><text class="sub" x="480" y="194" text-anchor="middle">list published on the site</text></g>
+              <g class="no"><rect x="355" y="260" width="250" height="58" rx="10"/><text x="480" y="284" text-anchor="middle">3rd · fallback list</text><text class="sub" x="480" y="304" text-anchor="middle">written into index.html itself</text></g>
+              <g class="no"><rect x="690" y="121" width="240" height="58" rx="10"/><text x="810" y="145" text-anchor="middle">normalizarPainel()</text><text class="sub" x="810" y="165" text-anchor="middle">fills in initial and URL</text></g>
+              <g class="no fato"><rect x="690" y="260" width="240" height="58" rx="10"/><text x="810" y="284" text-anchor="middle">home page cards</text><text class="sub" x="810" y="304" text-anchor="middle">one per dashboard</text></g>
+            </svg>
+            <figcaption>The admin area saves to the browser; the home page gives priority to that version, then to the published JSON, and lastly to the fallback list.</figcaption>
+          </figure>
+        </section>
+
+        <!-- 03 -->
+        <section class="capitulo" id="c03">
+          <span class="rotulo-cap">03 · The home page</span>
+          <h2>One card per dashboard, built on the fly.</h2>
+          <p>The home page is a single page with a title, the link to the admin area, and a grid that adapts to the screen width (<code>auto-fit</code>, cards at least 260 px wide). JavaScript reads the list and creates each card:</p>
+          <div class="etapas revelar">
+            <div class="etapa"><div><h4>Loads the list</h4><p>browser, JSON, or fallback, in that order</p></div></div>
+            <div class="etapa"><div><h4>Fills in what's missing</h4><p>initial from the name, and the demo dashboard URL when there is no address</p></div></div>
+            <div class="etapa"><div><h4>Draws the card</h4><p>icon with the initial, name, description, and “Acessar painel” (Open dashboard)</p></div></div>
+            <div class="etapa"><div><h4>Decides how to open it</h4><p>external links (<code>http</code> or <code>https</code>) open in a new tab, with <code>noopener noreferrer</code>; internal links open in the same tab</p></div></div>
+          </div>
+          <div class="grade g2 revelar">
+            <div class="cartao azul"><h4>The hub's look</h4><p>Slate-blue gradient background, translucent cards with blur, and an icon with a sky-blue-to-lilac gradient. On hover, the card lifts and its border lights up.</p></div>
+            <div class="cartao verde"><h4>No dependencies</h4><p>Plain HTML, CSS, and JavaScript, with no framework and no build step. What's in the repository is exactly what the browser receives.</p></div>
+          </div>
+        </section>
+
+        <!-- 04 -->
+        <section class="capitulo" id="c04">
+          <span class="rotulo-cap">04 · Administration</span>
+          <h2>Two tabs: dashboards and administrators.</h2>
+          <p>The admin area handles all the hub's maintenance. In the demo, every change is saved in <code>localStorage</code> under two keys: <code>portfolio_paineis_publicados</code> and <code>portfolio_admins</code>.</p>
+          <div class="grade g2 revelar">
+            <div class="cartao azul"><span class="num">DASHBOARDS TAB</span><h4>Create and edit in the same form</h4><p>Name, description, and URL. “Editar” (Edit) fills in the form and switches the button to “Salvar alterações” (Save changes); “Remover” (Remove) asks for confirmation. Name and URL are required.</p></div>
+            <div class="cartao violeta"><span class="num">ADMINISTRATORS TAB</span><h4>Username, email, and creation date</h4><p>Create an administrator and, for each one, change the username, email, or password, or delete it. Each action opens a dialog with only the fields it needs.</p></div>
+          </div>
+          <div class="grade g3 revelar">
+            <div class="cartao"><h4>Main user</h4><p>Marked with the <strong>PAI</strong> (parent) badge. The delete button is disabled for this user.</p></div>
+            <div class="cartao"><h4>Simulated password</h4><p>In the demo, changing the password only confirms the action on screen; no password is stored.</p></div>
+            <div class="cartao"><h4>Immediate effect</h4><p>Back on the home page, the cards already reflect what was added, edited, or removed.</p></div>
+          </div>
+          <div class="galeria revelar">
+            <figure><img src="../assets/central-admin.jpg" alt="Dashboards tab of the admin area: form with name, description, and URL, and the table of registered dashboards with Edit and Remove buttons" loading="lazy" width="1440" height="900"><figcaption>Dashboards tab: form and list with edit and remove.</figcaption></figure>
+            <figure><img src="../assets/central-admins.jpg" alt="Administrators tab: table with username, email, creation date, and actions; the main user has the PAI badge" loading="lazy" width="1440" height="900"><figcaption>Administrators tab: main user with the PAI badge.</figcaption></figure>
+          </div>
+        </section>
+
+        <!-- 05 -->
+        <section class="capitulo" id="c05">
+          <span class="rotulo-cap">05 · Access</span>
+          <h2>In the original project, the door has a lock.</h2>
+          <p>The version published here is static and opens the admin area to any visitor. In the original project, the admin area is protected by a login, and there is a password reset page. The demo kept the screens and replaced what depended on a server:</p>
+          <div class="revelar">
+            <div class="mudanca"><div class="antes"><b>Original</b>Admin area behind a login.</div><div class="seta">→</div><div class="depois"><b>Demo</b>Open access, flagged at the top of the screen as “Modo portfolio ACESSO LIVRE” (portfolio mode, open access).</div></div>
+            <div class="mudanca"><div class="antes"><b>Original</b>Page to reset the password.</div><div class="seta">→</div><div class="depois"><b>Demo</b><code>reset-senha.html</code> explains that passwords are disabled and goes straight to the admin area.</div></div>
+            <div class="mudanca"><div class="antes"><b>Original</b>Administrators registered with username, email, and password.</div><div class="seta">→</div><div class="depois"><b>Demo</b>Two fictional administrators, with <code>exemplo.com</code> email addresses.</div></div>
+          </div>
+          <p class="destaque revelar">Show how it works without exposing who uses it: the demo stores no real data.</p>
+        </section>
+
+        <!-- 06 -->
+        <section class="capitulo" id="c06">
+          <span class="rotulo-cap">06 · Demo dashboard</span>
+          <h2>A sample dashboard for any card.</h2>
+          <p>When a dashboard is added without a URL, the card points to <code>painel-demo.html?cliente=&lt;nome&gt;</code>. That dashboard reads the client name from the address, uses it as the title, and builds a dashboard with fictional numbers, with no server and no database.</p>
+          <div class="grade g4 revelar">
+            <div class="cartao azul"><h4>3 filters</h4><p>Period (30, 60, or 90 days), channel, and region.</p></div>
+            <div class="cartao verde"><h4>4 indicators</h4><p>Revenue, orders, target, and files OK.</p></div>
+            <div class="cartao ambar"><h4>3 tabs</h4><p>Sales, targets, and files, each with a chart and a table.</p></div>
+            <div class="cartao violeta"><h4>CSS charts</h4><p>Bars drawn with HTML and CSS, with no charting library.</p></div>
+          </div>
+          <p>The filters really work: each combination applies a multiplier to the base series, and indicators, charts, and tables are recalculated on every change.</p>
+          <figure class="diagrama revelar">
+            <img src="../assets/central-painel-demo.jpg" alt="Demo dashboard: period, channel, and region filters, four indicators, Sales, Targets, and Files tabs, a monthly sell-out chart, and a table of regions" loading="lazy" width="1440" height="900">
+            <figcaption>Demo dashboard opened with <code>?cliente=demonstracao</code>.</figcaption>
+          </figure>
+        </section>
+
+        <!-- 07 -->
+        <section class="capitulo" id="c07">
+          <span class="rotulo-cap">07 · Deployment</span>
+          <h2>Pushed to main, it's live.</h2>
+          <p>Publishing to GitHub Pages is handled by a GitHub Actions workflow (<code>.github/workflows/pages.yml</code>). It runs on every push to the <code>main</code> branch or manually, and publishes the entire repository folder:</p>
+          <div class="etapas revelar">
+            <div class="etapa"><div><h4>Checkout</h4><p><code>actions/checkout@v4</code> fetches the repository</p></div></div>
+            <div class="etapa"><div><h4>Configures Pages</h4><p><code>actions/configure-pages@v5</code></p></div></div>
+            <div class="etapa"><div><h4>Packages the site</h4><p><code>actions/upload-pages-artifact@v3</code>, with the repository root as the content</p></div></div>
+            <div class="etapa"><div><h4>Publishes</h4><p><code>actions/deploy-pages@v4</code> returns the page address in the <code>github-pages</code> environment</p></div></div>
+          </div>
+          <div class="grade g3 revelar">
+            <div class="cartao"><h4>Minimal permissions</h4><p>The workflow only reads the content and writes to Pages (<code>contents: read</code>, <code>pages: write</code>, <code>id-token: write</code>).</p></div>
+            <div class="cartao"><h4>One deployment at a time</h4><p>The <code>pages</code> concurrency group prevents two simultaneous deployments, without canceling the one in progress.</p></div>
+            <div class="cartao"><h4>No Jekyll, with a 404</h4><p>The <code>.nojekyll</code> file publishes the files as they are, and <code>404.html</code> sends old addresses to the right place.</p></div>
+          </div>
+        </section>
+
+        <!-- 08 -->
+        <section class="capitulo" id="c08">
+          <span class="rotulo-cap">08 · Production and demo</span>
+          <h2>In production with a login; here, in the browser.</h2>
+          <div class="arquitetura revelar">
+            <div class="caixa"><span class="tag">GitHub</span><b>Repository</b><ul><li>pages and <code>paineis.json</code></li><li>Pages workflow</li></ul></div>
+            <div class="seta">→</div>
+            <div class="caixa"><span class="tag">GitHub Pages</span><b>Static site</b><ul><li>case study at the root</li><li>hub at <code>app/</code></li></ul></div>
+            <div class="seta">→</div>
+            <div class="caixa"><span class="tag">Browser</span><b>Hub</b><ul><li>cards and administration</li><li>edits in <code>localStorage</code></li></ul></div>
+          </div>
+          <p>This demo has the same screens as the original project: the home page with the cards, the admin area with dashboards and administrators, and the sample dashboard. What changed is access, which is now open, and storage, which moved to the browser. The cards lead to the other dashboards in the portfolio, also published with fictional data.</p>
+          <h3>Technologies</h3>
+          <div class="pilulas">
+            <span>HTML</span><span>CSS (grid, backdrop-filter)</span><span>Framework-free JavaScript</span><span>Fetch API</span><span>localStorage</span><span>JSON</span><span>GitHub Actions</span><span>GitHub Pages</span>
+          </div>
+          <div class="encerramento revelar">
+            <span class="rotulo-cap">Try it</span>
+            <h2>Add a dashboard and watch the card appear on the home page.</h2>
+            <p class="texto">Suggested walkthrough: open the hub, click “Administrar painéis” (Manage dashboards), and add a dashboard with just a name. Go back to the home page: the new card has its initial filled in and opens the demo dashboard with that name.</p>
+            <div class="acoes"><a class="btn primario" href="../app/">Open the hub →</a><a class="btn" href="https://github.com/lariantunez/central-de-paineis">View the code</a></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span><strong>Larissa Antunez</strong> · Analytics &amp; Development</span>
+      <span>Project in production · demo with fictional data</span>
+    </div>
+  </footer>
+  <script src="../assets/estudo.js"></script>
+</body>
+</html>
