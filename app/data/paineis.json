@@ -1,0 +1,30 @@
+[
+  {
+    "id": "vitta",
+    "nome": "Vitta",
+    "descricao": "Analise de vendas, metas e desempenho comercial.",
+    "url": "https://lariantunez.github.io/painel-sellout-varejo/",
+    "inicial": "V"
+  },
+  {
+    "id": "atlas",
+    "nome": "Atlas",
+    "descricao": "Acompanhamento geografico de sell out por regional.",
+    "url": "https://lariantunez.github.io/painel-sellout-de-para/",
+    "inicial": "A"
+  },
+  {
+    "id": "sellout",
+    "nome": "Acompanhamento Sell Out",
+    "descricao": "Monitoramento de arquivos, status e volume recebido.",
+    "url": "https://lariantunez.github.io/painel-acompanhamento-relatorios-sellout/",
+    "inicial": "S"
+  },
+  {
+    "id": "bella",
+    "nome": "Bella",
+    "descricao": "Analise comercial e acompanhamento de indicadores do cliente.",
+    "url": "https://lariantunez.github.io/painel-contagem-estoque/",
+    "inicial": "B"
+  }
+]

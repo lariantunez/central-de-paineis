@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administracao</title>
+<style>
+  :root {
+    --bg-1: #0f172a;
+    --bg-2: #1e293b;
+    --surface: rgba(255, 255, 255, 0.06);
+    --surface2: rgba(255, 255, 255, 0.04);
+    --border: rgba(255, 255, 255, 0.10);
+    --text: #f1f5f9;
+    --text-dim: #94a3b8;
+    --accent: #38bdf8;
+    --accent2: #a78bfa;
+    --danger: #f87171;
+    --ok: #4ade80;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at top left, var(--bg-2), var(--bg-1) 60%);
+    color: var(--text);
+  }
+  a { color: var(--accent); }
+  #dashboard { display: block; padding: 48px 24px 64px; max-width: 1000px; margin: 0 auto; }
+  .topbar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    backdrop-filter: blur(6px);
+  }
+  .topbar strong { color: var(--accent2); }
+  .topbar .sep { margin: 0 6px; }
+  .btn-sair {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  .btn-sair:hover { border-color: var(--accent); color: var(--accent); }
+  h2.page-title { font-size: 1.8rem; margin: 0 0 4px; font-weight: 600; letter-spacing: -0.02em; }
+  .page-sub { color: var(--text-dim); margin: 0 0 28px; font-size: 0.95rem; }
+  .subtabs-nav { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
+  .subtab-btn {
+    background: none; border: none; color: var(--text-dim);
+    padding: 10px 16px; font-size: 0.9rem; cursor: pointer;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    white-space: nowrap;
+  }
+  .subtab-btn.ativo { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.ativo { display: block; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 20px; margin-bottom: 16px; backdrop-filter: blur(6px);
+  }
+  .card h3 { margin: 0 0 16px; font-size: 1.05rem; font-weight: 600; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.82rem; color: var(--text-dim); margin-bottom: 4px; }
+  .field input {
+    width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text); font-size: 0.9rem;
+  }
+  .field input:focus { outline: 1px solid var(--accent); }
+  .btn { border: none; border-radius: 8px; padding: 10px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+  .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #0f172a; }
+  .btn.outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn.outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.danger-outline { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .list-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 32px 0 12px; }
+  .list-header h3 { margin: 0; font-size: 1.05rem; }
+  .table-wrap {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    overflow: auto; backdrop-filter: blur(6px);
+  }
+  table { width: 100%; border-collapse: collapse; min-width: 680px; }
+  th, td { text-align: left; padding: 14px 16px; font-size: 0.88rem; }
+  th { color: var(--text-dim); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border); }
+  tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+  .badge-pai {
+    color: #0f172a; font-size: 0.65rem; margin-left: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    padding: 1px 7px; border-radius: 999px; font-weight: 700;
+  }
+  .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .row-actions .btn { padding: 6px 12px; font-size: 0.78rem; }
+  .link-cell { color: var(--text-dim); font-size: 0.8rem; word-break: break-all; }
+  .msg { font-size: 0.85rem; margin: 10px 0; min-height: 1em; }
+  .msg.erro { color: var(--danger); }
+  .msg.ok { color: var(--ok); }
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+    align-items: center; justify-content: center; padding: 20px; z-index: 50;
+  }
+  .modal-overlay.aberto { display: flex; }
+  .modal-box {
+    background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px;
+    padding: 24px; width: 100%; max-width: 380px;
+  }
+  .modal-box h3 { margin: 0 0 16px; font-size: 1.05rem; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+  @media (max-width: 620px) {
+    #dashboard { padding: 28px 16px 48px; }
+    .topbar, .list-header { align-items: flex-start; flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div id="dashboard">
+  <div class="topbar">
+    <div>Modo portfolio <strong>ACESSO LIVRE</strong><span class="sep">-</span><span id="topbar-secao">Central de Paineis</span></div>
+    <a class="btn-sair" href="index.html">Voltar para home</a>
+  </div>
+
+  <h2 class="page-title">Painel de Administracao</h2>
+  <p class="page-sub">Gerencie os paineis exibidos na home e os administradores com dados ficticios.</p>
+
+  <div class="subtabs-nav">
+    <button class="subtab-btn ativo" data-tab="paineis">Paineis</button>
+    <button class="subtab-btn" data-tab="admins">Administradores</button>
+  </div>
+
+  <div class="tab-panel ativo" id="tab-paineis">
+    <div class="card">
+      <h3 id="painel-form-title">Novo painel</h3>
+      <input type="hidden" id="painel-id">
+      <div class="field"><label>Nome</label><input type="text" id="painel-nome" placeholder="Ex: Painel Comercial"></div>
+      <div class="field"><label>Descricao</label><input type="text" id="painel-descricao" placeholder="Ex: Analise de informacoes do cliente"></div>
+      <div class="field"><label>URL</label><input type="url" id="painel-url" placeholder="painel-demo.html?cliente=novo"></div>
+      <div class="msg" id="painel-msg"></div>
+      <button class="btn primary" id="btn-salvar-painel">Adicionar painel</button>
+      <button class="btn outline" id="btn-cancelar-painel" style="display:none;">Cancelar edicao</button>
+    </div>
+
+    <div class="list-header"><h3>Paineis cadastrados</h3></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nome</th><th>URL</th><th>Acoes</th></tr></thead>
+        <tbody id="lista-paineis"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-admins">
+    <div class="list-header">
+      <h3>Administradores cadastrados</h3>
+      <button class="btn primary" id="btn-novo-admin">+ Novo Admin</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Usuario</th><th>E-mail</th><th>Criado em</th><th>Acoes</th></tr></thead>
+        <tbody id="lista-admins"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box">
+    <h3 id="modal-titulo"></h3>
+    <div class="field" id="modal-campo-usuario" style="display:none;">
+      <label>Usuario</label><input type="text" id="modal-input-usuario">
+    </div>
+    <div class="field" id="modal-campo-email" style="display:none;">
+      <label>E-mail</label><input type="email" id="modal-input-email">
+    </div>
+    <div class="field" id="modal-campo-senha" style="display:none;">
+      <label>Senha</label><input type="password" id="modal-input-senha">
+    </div>
+    <div class="msg" id="modal-msg"></div>
+    <div class="modal-actions">
+      <button class="btn outline" id="modal-cancelar">Cancelar</button>
+      <button class="btn primary" id="modal-confirmar">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const PAINEIS_KEY = 'portfolio_paineis_publicados';
+  const ADMINS_KEY = 'portfolio_admins';
+
+  const paineisPadrao = [
+    { id: 'vitta', nome: 'Vitta', descricao: 'Analise de vendas, metas e desempenho comercial.', url: 'https://lariantunez.github.io/painel-sellout-varejo/', inicial: 'V' },
+    { id: 'atlas', nome: 'Atlas', descricao: 'Acompanhamento geografico de sell out por regional.', url: 'https://lariantunez.github.io/painel-sellout-de-para/', inicial: 'A' },
+    { id: 'sellout', nome: 'Acompanhamento Sell Out', descricao: 'Monitoramento de arquivos, status e volume recebido.', url: 'https://lariantunez.github.io/painel-acompanhamento-relatorios-sellout/', inicial: 'S' },
+    { id: 'bella', nome: 'Bella', descricao: 'Analise comercial e acompanhamento de indicadores do cliente.', url: 'https://lariantunez.github.io/painel-contagem-estoque/', inicial: 'B' }
+  ];
+
+  const adminsPadrao = [
+    { id: 'admin-pai', usuario: 'portfolio.admin', email: 'portfolio@exemplo.com', criadoEm: '2026-08-01T12:00:00.000Z', usuarioPai: true },
+    { id: 'ana', usuario: 'ana.demo', email: 'ana.demo@exemplo.com', criadoEm: '2026-08-08T12:00:00.000Z', usuarioPai: false }
+  ];
+
+  function lerColecao(chave, padrao) {
+    try {
+      const salvo = localStorage.getItem(chave);
+      return salvo ? JSON.parse(salvo) : structuredClone(padrao);
+    } catch (_) {
+      return structuredClone(padrao);
+    }
+  }
+
+  function salvarColecao(chave, dados) {
+    localStorage.setItem(chave, JSON.stringify(dados));
+  }
+
+  let paineis = lerColecao(PAINEIS_KEY, paineisPadrao);
+  let admins = lerColecao(ADMINS_KEY, adminsPadrao);
+
+  document.querySelectorAll('.subtab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('ativo'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('ativo'));
+      btn.classList.add('ativo');
+      document.getElementById(`tab-${btn.dataset.tab}`).classList.add('ativo');
+    });
+  });
+
+  const painelIdInput = document.getElementById('painel-id');
+  const painelNomeInput = document.getElementById('painel-nome');
+  const painelDescInput = document.getElementById('painel-descricao');
+  const painelUrlInput = document.getElementById('painel-url');
+  const painelMsg = document.getElementById('painel-msg');
+
+  function resetFormPainel() {
+    painelIdInput.value = '';
+    painelNomeInput.value = '';
+    painelDescInput.value = '';
+    painelUrlInput.value = '';
+    painelMsg.textContent = '';
+    document.getElementById('painel-form-title').textContent = 'Novo painel';
+    document.getElementById('btn-salvar-painel').textContent = 'Adicionar painel';
+    document.getElementById('btn-cancelar-painel').style.display = 'none';
+  }
+
+  function carregarPaineis() {
+    const tbody = document.getElementById('lista-paineis');
+    tbody.innerHTML = '';
+    paineis.forEach(p => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${p.nome}</td>
+        <td class="link-cell">${p.url}</td>
+        <td class="row-actions">
+          <button class="btn outline" data-acao="editar">Editar</button>
+          <button class="btn danger-outline" data-acao="remover">Remover</button>
+        </td>`;
+      tr.querySelector('[data-acao="editar"]').addEventListener('click', () => {
+        painelIdInput.value = p.id;
+        painelNomeInput.value = p.nome;
+        painelDescInput.value = p.descricao || '';
+        painelUrlInput.value = p.url;
+        document.getElementById('painel-form-title').textContent = 'Editar painel';
+        document.getElementById('btn-salvar-painel').textContent = 'Salvar alteracoes';
+        document.getElementById('btn-cancelar-painel').style.display = 'inline-block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      tr.querySelector('[data-acao="remover"]').addEventListener('click', () => {
+        if (!confirm(`Remover "${p.nome}"?`)) return;
+        paineis = paineis.filter(item => item.id !== p.id);
+        salvarColecao(PAINEIS_KEY, paineis);
+        carregarPaineis();
+      });
+      tbody.appendChild(tr);
+    });
+  }
+
+  document.getElementById('btn-cancelar-painel').addEventListener('click', resetFormPainel);
+
+  document.getElementById('btn-salvar-painel').addEventListener('click', () => {
+    const id = painelIdInput.value;
+    const payload = {
+      id: id || crypto.randomUUID(),
+      nome: painelNomeInput.value.trim(),
+      descricao: painelDescInput.value.trim(),
+      url: painelUrlInput.value.trim() || `painel-demo.html?cliente=${encodeURIComponent(painelNomeInput.value.trim().toLowerCase())}`,
+      inicial: (painelNomeInput.value.trim().charAt(0) || 'P').toUpperCase()
+    };
+    if (!payload.nome || !payload.url) {
+      painelMsg.textContent = 'Nome e URL sao obrigatorios.';
+      painelMsg.className = 'msg erro';
+      return;
+    }
+
+    if (id) paineis = paineis.map(item => item.id === id ? payload : item);
+    else paineis.push(payload);
+    salvarColecao(PAINEIS_KEY, paineis);
+    painelMsg.textContent = id ? 'Painel atualizado.' : 'Painel adicionado.';
+    painelMsg.className = 'msg ok';
+    resetFormPainel();
+    carregarPaineis();
+  });
+
+  function carregarAdmins() {
+    const tbody = document.getElementById('lista-admins');
+    tbody.innerHTML = '';
+    admins.forEach(a => {
+      const tr = document.createElement('tr');
+      const badge = a.usuarioPai ? '<span class="badge-pai">PAI</span>' : '';
+      const criadoEm = new Date(a.criadoEm).toLocaleDateString('pt-BR');
+      tr.innerHTML = `
+        <td>${a.usuario}${badge}</td>
+        <td>${a.email || '-'}</td>
+        <td>${criadoEm}</td>
+        <td class="row-actions">
+          <button class="btn outline" data-acao="nome">Nome</button>
+          <button class="btn outline" data-acao="email">E-mail</button>
+          <button class="btn outline" data-acao="senha">Senha</button>
+          <button class="btn danger-outline" data-acao="excluir" ${a.usuarioPai ? 'disabled title="O usuario pai fica fixo na demonstracao"' : ''}>Excluir</button>
+        </td>`;
+      tr.querySelector('[data-acao="nome"]').addEventListener('click', () => abrirModalUsuario(a));
+      tr.querySelector('[data-acao="email"]').addEventListener('click', () => abrirModalEmail(a));
+      tr.querySelector('[data-acao="senha"]').addEventListener('click', () => abrirModalSenha(a));
+      const btnExcluir = tr.querySelector('[data-acao="excluir"]');
+      if (!a.usuarioPai) btnExcluir.addEventListener('click', () => excluirAdmin(a));
+      tbody.appendChild(tr);
+    });
+  }
+
+  function excluirAdmin(admin) {
+    if (!confirm(`Remover o administrador "${admin.usuario}"?`)) return;
+    admins = admins.filter(item => item.id !== admin.id);
+    salvarColecao(ADMINS_KEY, admins);
+    carregarAdmins();
+  }
+
+  const overlay = document.getElementById('modal-overlay');
+  const modalTitulo = document.getElementById('modal-titulo');
+  const campoUsuario = document.getElementById('modal-campo-usuario');
+  const campoEmail = document.getElementById('modal-campo-email');
+  const campoSenha = document.getElementById('modal-campo-senha');
+  const inputUsuario = document.getElementById('modal-input-usuario');
+  const inputEmail = document.getElementById('modal-input-email');
+  const inputSenha = document.getElementById('modal-input-senha');
+  const modalMsg = document.getElementById('modal-msg');
+  let acaoModalAtual = null;
+
+  function abrirModal(titulo) {
+    modalTitulo.textContent = titulo;
+    modalMsg.textContent = '';
+    overlay.classList.add('aberto');
+  }
+
+  function fecharModal() {
+    overlay.classList.remove('aberto');
+    [campoUsuario, campoEmail, campoSenha].forEach(c => c.style.display = 'none');
+    inputUsuario.value = '';
+    inputEmail.value = '';
+    inputSenha.value = '';
+    modalMsg.textContent = '';
+    acaoModalAtual = null;
+  }
+
+  document.getElementById('modal-cancelar').addEventListener('click', fecharModal);
+
+  function abrirModalNovoAdmin() {
+    abrirModal('Novo administrador');
+    campoUsuario.style.display = 'block';
+    campoEmail.style.display = 'block';
+    campoSenha.style.display = 'block';
+    acaoModalAtual = () => {
+      if (!inputUsuario.value.trim()) {
+        modalMsg.textContent = 'Usuario e obrigatorio.';
+        modalMsg.className = 'msg erro';
+        return;
+      }
+      admins.push({
+        id: crypto.randomUUID(),
+        usuario: inputUsuario.value.trim(),
+        email: inputEmail.value.trim(),
+        criadoEm: new Date().toISOString(),
+        usuarioPai: false
+      });
+      salvarColecao(ADMINS_KEY, admins);
+      fecharModal();
+      carregarAdmins();
+    };
+  }
+  document.getElementById('btn-novo-admin').addEventListener('click', abrirModalNovoAdmin);
+
+  function atualizarAdmin(id, patch) {
+    admins = admins.map(item => item.id === id ? { ...item, ...patch } : item);
+    salvarColecao(ADMINS_KEY, admins);
+    fecharModal();
+    carregarAdmins();
+  }
+
+  function abrirModalUsuario(admin) {
+    abrirModal(`Alterar nome de usuario - ${admin.usuario}`);
+    campoUsuario.style.display = 'block';
+    inputUsuario.value = admin.usuario;
+    acaoModalAtual = () => atualizarAdmin(admin.id, { usuario: inputUsuario.value.trim() || admin.usuario });
+  }
+
+  function abrirModalEmail(admin) {
+    abrirModal(`Alterar e-mail - ${admin.usuario}`);
+    campoEmail.style.display = 'block';
+    inputEmail.value = admin.email || '';
+    acaoModalAtual = () => atualizarAdmin(admin.id, { email: inputEmail.value.trim() });
+  }
+
+  function abrirModalSenha(admin) {
+    abrirModal(`Alterar senha - ${admin.usuario}`);
+    campoSenha.style.display = 'block';
+    inputSenha.placeholder = 'Senha ficticia';
+    acaoModalAtual = () => {
+      modalMsg.textContent = 'Senha atualizada na demonstracao.';
+      modalMsg.className = 'msg ok';
+      setTimeout(fecharModal, 450);
+    };
+  }
+
+  document.getElementById('modal-confirmar').addEventListener('click', () => {
+    if (acaoModalAtual) acaoModalAtual();
+  });
+
+  carregarPaineis();
+  carregarAdmins();
+</script>
+</body>
+</html>

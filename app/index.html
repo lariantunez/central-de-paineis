@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Paineis</title>
+<style>
+  :root {
+    --bg-1: #0f172a;
+    --bg-2: #1e293b;
+    --card-bg: rgba(255, 255, 255, 0.06);
+    --card-border: rgba(255, 255, 255, 0.10);
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-2: #a78bfa;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at top left, var(--bg-2), var(--bg-1) 60%);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 64px 24px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    margin: 0 0 8px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  header p {
+    margin: 0 0 12px;
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+
+  .admin-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 28px;
+    text-decoration: none;
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 170px;
+    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    backdrop-filter: blur(6px);
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.10);
+  }
+
+  .card .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #0f172a;
+    font-weight: 700;
+  }
+
+  .card h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .card p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .card .go {
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  footer {
+    margin-top: 56px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Central de Paineis</h1>
+    <p>Versao portfolio com dados ficticios e navegacao demonstrativa.</p>
+    <a href="admin.html" class="admin-link">Administrar paineis</a>
+  </header>
+
+  <main class="grid" id="grid"></main>
+
+  <footer>Projeto demonstrativo publicado via GitHub Pages. Nenhum dado real e armazenado.</footer>
+
+<script>
+  const grid = document.getElementById('grid');
+
+  const paineisFallback = [
+    {
+      id: 'vitta',
+      nome: 'Vitta',
+      descricao: 'Analise de vendas, metas e desempenho comercial.',
+      url: 'https://lariantunez.github.io/painel-sellout-varejo/',
+      inicial: 'V'
+    },
+    {
+      id: 'atlas',
+      nome: 'Atlas',
+      descricao: 'Acompanhamento geografico de sell out por regional.',
+      url: 'https://lariantunez.github.io/painel-sellout-de-para/',
+      inicial: 'A'
+    },
+    {
+      id: 'sellout',
+      nome: 'Acompanhamento Sell Out',
+      descricao: 'Monitoramento de arquivos, status e volume recebido.',
+      url: 'https://lariantunez.github.io/painel-acompanhamento-relatorios-sellout/',
+      inicial: 'S'
+    },
+    {
+      id: 'bella',
+      nome: 'Bella',
+      descricao: 'Analise comercial e acompanhamento de indicadores do cliente.',
+      url: 'https://lariantunez.github.io/painel-contagem-estoque/',
+      inicial: 'B'
+    }
+  ];
+
+  function normalizarPainel(painel) {
+    return {
+      ...painel,
+      inicial: painel.inicial || (painel.nome || 'P').trim().charAt(0).toUpperCase(),
+      url: painel.url || `painel-demo.html?cliente=${encodeURIComponent(painel.id || painel.nome || 'demo')}`
+    };
+  }
+
+  async function carregarPaineis() {
+    try {
+      const salvo = localStorage.getItem('portfolio_paineis_publicados');
+      if (salvo) return JSON.parse(salvo).map(normalizarPainel);
+    } catch (_) {}
+
+    try {
+      const res = await fetch('data/paineis.json');
+      if (!res.ok) throw new Error('Arquivo de dados indisponivel.');
+      return (await res.json()).map(normalizarPainel);
+    } catch (_) {
+      return paineisFallback;
+    }
+  }
+
+  carregarPaineis().then(paineis => {
+    grid.innerHTML = '';
+    paineis.forEach(painel => {
+      const a = document.createElement('a');
+      a.className = 'card';
+      a.href = painel.url;
+      if (/^https?:\/\//.test(painel.url)) {
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+      }
+      a.innerHTML = `
+        <div class="icon">${painel.inicial}</div>
+        <h2>${painel.nome}</h2>
+        <p>${painel.descricao || 'Painel demonstrativo com dados ficticios.'}</p>
+        <span class="go">Acessar painel -></span>
+      `;
+      grid.appendChild(a);
+    });
+  });
+</script>
+</body>
+</html>
