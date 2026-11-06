@@ -73,9 +73,8 @@
           <li><a href="#c03"><b>03</b>La página de inicio</a></li>
           <li><a href="#c04"><b>04</b>Administración</a></li>
           <li><a href="#c05"><b>05</b>Acceso</a></li>
-          <li><a href="#c06"><b>06</b>Panel demo</a></li>
-          <li><a href="#c07"><b>07</b>Despliegue</a></li>
-          <li><a href="#c08"><b>08</b>Producción y demo</a></li>
+          <li><a href="#c06"><b>06</b>Despliegue</a></li>
+          <li><a href="#c07"><b>07</b>Producción y demo</a></li>
         </ol>
       </aside>
 
@@ -100,7 +99,7 @@
           <p>Solo lee una lista y dibuja una tarjeta para cada elemento. Esa separación guio el resto del proyecto:</p>
           <div class="grade g2 revelar">
             <div class="cartao"><span class="num">01</span><h4>Datos fuera de la pantalla</h4><p>Los paneles viven en una lista (<code>data/paineis.json</code>), no en el HTML. Agregar un panel es agregar un elemento.</p></div>
-            <div class="cartao"><span class="num">02</span><h4>Campos mínimos, el resto se deduce</h4><p>Sin inicial, la página de inicio usa la primera letra del nombre. Sin URL, la tarjeta apunta al panel de demostración de ese cliente.</p></div>
+            <div class="cartao"><span class="num">02</span><h4>Campos mínimos, el resto se deduce</h4><p>Sin inicial, la página de inicio usa la primera letra del nombre. Nombre y URL son obligatorios en el registro, así que cada tarjeta lleva a un panel real.</p></div>
             <div class="cartao"><span class="num">03</span><h4>La página nunca queda vacía</h4><p>Si el archivo de datos no carga, la página de inicio usa una lista de respaldo escrita en el propio código.</p></div>
             <div class="cartao"><span class="num">04</span><h4>Nada real en la demostración</h4><p>Sin inicio de sesión, sin correo y sin base de datos. Las ediciones quedan solo en el navegador de quien prueba, y los administradores son ficticios.</p></div>
           </div>
@@ -110,7 +109,7 @@
         <section class="capitulo" id="c02">
           <span class="rotulo-cap">02 · Los datos</span>
           <h2>Cinco campos describen un panel.</h2>
-          <p>El archivo <code>data/paineis.json</code> es una lista simple. Cada panel tiene cinco campos, y solo el nombre es indispensable para que aparezca la tarjeta:</p>
+          <p>El archivo <code>data/paineis.json</code> es una lista simple. Cada panel tiene cinco campos; nombre y URL son obligatorios:</p>
           <div class="tabela-rolagem revelar">
             <table class="tabela">
               <thead><tr><th>Campo</th><th>Qué guarda</th><th>Si está vacío</th></tr></thead>
@@ -118,7 +117,7 @@
                 <tr><td><code>id</code></td><td>Identificador del panel</td><td>En el registro, se genera con <code>crypto.randomUUID()</code></td></tr>
                 <tr><td><code>nome</code></td><td>Título de la tarjeta</td><td><span class="alerta">Obligatorio</span> en el formulario de administración</td></tr>
                 <tr><td><code>descricao</code></td><td>Una frase sobre lo que muestra el panel</td><td>La tarjeta muestra un texto predeterminado</td></tr>
-                <tr><td><code>url</code></td><td>Dirección del panel</td><td>Apunta a <code>painel-demo.html?cliente=&lt;id&gt;</code></td></tr>
+                <tr><td><code>url</code></td><td>Dirección del panel</td><td><span class="alerta">Obligatorio</span> en el formulario de administración</td></tr>
                 <tr><td><code>inicial</code></td><td>Letra del ícono de la tarjeta</td><td>Primera letra del nombre, en mayúscula</td></tr>
               </tbody>
             </table>
@@ -135,7 +134,7 @@
               <g class="no fato"><rect x="355" y="40" width="250" height="58" rx="10"/><text x="480" y="64" text-anchor="middle">1.º · localStorage</text><text class="sub" x="480" y="84" text-anchor="middle">lista editada en este navegador</text></g>
               <g class="no dim"><rect x="355" y="150" width="250" height="58" rx="10"/><text x="480" y="174" text-anchor="middle">2.º · data/paineis.json</text><text class="sub" x="480" y="194" text-anchor="middle">lista publicada en el sitio</text></g>
               <g class="no"><rect x="355" y="260" width="250" height="58" rx="10"/><text x="480" y="284" text-anchor="middle">3.º · lista de respaldo</text><text class="sub" x="480" y="304" text-anchor="middle">escrita en el propio index.html</text></g>
-              <g class="no"><rect x="690" y="121" width="240" height="58" rx="10"/><text x="810" y="145" text-anchor="middle">normalizarPainel()</text><text class="sub" x="810" y="165" text-anchor="middle">completa inicial y URL</text></g>
+              <g class="no"><rect x="690" y="121" width="240" height="58" rx="10"/><text x="810" y="145" text-anchor="middle">normalizarPainel()</text><text class="sub" x="810" y="165" text-anchor="middle">completa la inicial</text></g>
               <g class="no fato"><rect x="690" y="260" width="240" height="58" rx="10"/><text x="810" y="284" text-anchor="middle">tarjetas del inicio</text><text class="sub" x="810" y="304" text-anchor="middle">una por panel</text></g>
             </svg>
             <figcaption>La administración guarda en el navegador; la página de inicio da prioridad a esa versión, luego al JSON publicado y, por último, a la lista de respaldo.</figcaption>
@@ -149,7 +148,7 @@
           <p>La página de inicio es una sola página, con un título, el enlace a la administración y una cuadrícula que se ajusta al ancho de la pantalla (<code>auto-fit</code>, tarjetas de al menos 260 px). El JavaScript lee la lista y crea cada tarjeta:</p>
           <div class="etapas revelar">
             <div class="etapa"><div><h4>Carga la lista</h4><p>navegador, JSON o respaldo, en ese orden</p></div></div>
-            <div class="etapa"><div><h4>Completa lo que falte</h4><p>inicial a partir del nombre y URL del panel de demostración cuando no hay dirección</p></div></div>
+            <div class="etapa"><div><h4>Completa lo que falte</h4><p>inicial a partir del nombre, cuando no la hay</p></div></div>
             <div class="etapa"><div><h4>Dibuja la tarjeta</h4><p>ícono con la inicial, nombre, descripción y “Acessar painel” (Acceder al panel)</p></div></div>
             <div class="etapa"><div><h4>Decide cómo abrir</h4><p>los enlaces externos (<code>http</code> o <code>https</code>) se abren en una pestaña nueva, con <code>noopener noreferrer</code>; los enlaces internos se abren en la misma pestaña</p></div></div>
           </div>
@@ -194,25 +193,7 @@
 
         <!-- 06 -->
         <section class="capitulo" id="c06">
-          <span class="rotulo-cap">06 · Panel demo</span>
-          <h2>Un panel de ejemplo para cualquier tarjeta.</h2>
-          <p>Cuando un panel se registra sin URL, la tarjeta apunta a <code>painel-demo.html?cliente=&lt;nome&gt;</code>. Ese panel lee el nombre del cliente en la dirección, lo usa como título y arma un dashboard con números ficticios, sin servidor y sin base de datos.</p>
-          <div class="grade g4 revelar">
-            <div class="cartao azul"><h4>3 filtros</h4><p>Período (30, 60 o 90 días), canal y regional.</p></div>
-            <div class="cartao verde"><h4>4 indicadores</h4><p>Ingresos, pedidos, meta y archivos OK.</p></div>
-            <div class="cartao ambar"><h4>3 pestañas</h4><p>Ventas, metas y archivos, cada una con gráfico y tabla.</p></div>
-            <div class="cartao violeta"><h4>Gráficos en CSS</h4><p>Barras dibujadas con HTML y CSS, sin biblioteca de gráficos.</p></div>
-          </div>
-          <p>Los filtros funcionan de verdad: cada combinación aplica un multiplicador sobre la serie base, y los indicadores, gráficos y tablas se recalculan con cada cambio.</p>
-          <figure class="diagrama revelar">
-            <img src="../assets/central-painel-demo.jpg" alt="Panel de demostración: filtros de período, canal y regional, cuatro indicadores, pestañas Ventas, Metas y Archivos, gráfico de sell out por mes y tabla de regiones" loading="lazy" width="1440" height="900">
-            <figcaption>Panel de demostración abierto con <code>?cliente=demonstracao</code>.</figcaption>
-          </figure>
-        </section>
-
-        <!-- 07 -->
-        <section class="capitulo" id="c07">
-          <span class="rotulo-cap">07 · Despliegue</span>
+          <span class="rotulo-cap">06 · Despliegue</span>
           <h2>Se envió a main, ya está en línea.</h2>
           <p>La publicación en GitHub Pages la hace un workflow de GitHub Actions (<code>.github/workflows/pages.yml</code>). Se ejecuta con cada envío a la rama <code>main</code> o manualmente, y publica la carpeta completa del repositorio:</p>
           <div class="etapas revelar">
@@ -228,9 +209,9 @@
           </div>
         </section>
 
-        <!-- 08 -->
-        <section class="capitulo" id="c08">
-          <span class="rotulo-cap">08 · Producción y demostración</span>
+        <!-- 07 -->
+        <section class="capitulo" id="c07">
+          <span class="rotulo-cap">07 · Producción y demostración</span>
           <h2>En producción, con inicio de sesión; aquí, en el navegador.</h2>
           <div class="arquitetura revelar">
             <div class="caixa"><span class="tag">GitHub</span><b>Repositorio</b><ul><li>páginas y <code>paineis.json</code></li><li>workflow de Pages</li></ul></div>
@@ -239,7 +220,7 @@
             <div class="seta">→</div>
             <div class="caixa"><span class="tag">Navegador</span><b>Central</b><ul><li>tarjetas y administración</li><li>ediciones en el <code>localStorage</code></li></ul></div>
           </div>
-          <p>Esta demostración tiene las mismas pantallas que el proyecto original: inicio con las tarjetas, administración con paneles y administradores, y el panel de ejemplo. Lo que cambió fue el acceso, que quedó libre, y el almacenamiento, que pasó al navegador. Las tarjetas llevan a los otros paneles del portafolio, también publicados con datos ficticios.</p>
+          <p>Esta demostración tiene las mismas pantallas que el proyecto original: inicio con las tarjetas y administración con paneles y administradores. Lo que cambió fue el acceso, que quedó libre, y el almacenamiento, que pasó al navegador. Las tarjetas llevan a los otros paneles del portafolio, también publicados con datos ficticios.</p>
           <h3>Tecnologías</h3>
           <div class="pilulas">
             <span>HTML</span><span>CSS (grid, backdrop-filter)</span><span>JavaScript sin framework</span><span>Fetch API</span><span>localStorage</span><span>JSON</span><span>GitHub Actions</span><span>GitHub Pages</span>
@@ -247,7 +228,7 @@
           <div class="encerramento revelar">
             <span class="rotulo-cap">Pruébalo</span>
             <h2>Registra un panel y mira cómo aparece la tarjeta en el inicio.</h2>
-            <p class="texto">Recorrido sugerido: abre la central, haz clic en “Administrar painéis” (Administrar paneles) y registra un panel solo con el nombre. Vuelve al inicio: la tarjeta nueva tiene la inicial calculada y abre el panel de demostración con ese nombre.</p>
+            <p class="texto">Recorrido sugerido: abre la central, haz clic en “Administrar painéis” (Administrar paneles) y registra un panel con nombre y URL. Vuelve al inicio: la tarjeta nueva aparece con la inicial calculada y abre la dirección indicada.</p>
             <div class="acoes"><a class="btn primario" href="../app/">Abrir la central →</a><a class="btn" href="https://github.com/lariantunez/central-de-paineis">Ver el código</a></div>
           </div>
         </section>

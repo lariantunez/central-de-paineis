@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Central de Paineis</title>
 <script>
-  // As paginas do app ficam em app/. Links antigos (admin.html, painel-demo.html, reset-senha.html)
+  // As paginas do app ficam em app/. Links antigos (admin.html, reset-senha.html)
   // sao levados para o novo lugar; qualquer outro endereco volta para a raiz do site.
   (function () {
     var partes = location.pathname.split('/');
     var raiz = '/' + (partes[1] ? partes[1] + '/' : '');
-    var antiga = location.pathname.match(/\/(admin|painel-demo|reset-senha)\.html$/);
+    var antiga = location.pathname.match(/\/(admin|reset-senha)\.html$/);
     var destino = antiga && location.pathname.indexOf('/app/') === -1 ? raiz + 'app/' + antiga[1] + '.html' + location.search : raiz;
     location.replace(destino);
   })();

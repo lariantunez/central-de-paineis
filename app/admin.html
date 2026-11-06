@@ -144,7 +144,7 @@
       <input type="hidden" id="painel-id">
       <div class="field"><label>Nome</label><input type="text" id="painel-nome" placeholder="Ex: Painel Comercial"></div>
       <div class="field"><label>Descricao</label><input type="text" id="painel-descricao" placeholder="Ex: Analise de informacoes do cliente"></div>
-      <div class="field"><label>URL</label><input type="url" id="painel-url" placeholder="painel-demo.html?cliente=novo"></div>
+      <div class="field"><label>URL</label><input type="url" id="painel-url" placeholder="https://..."></div>
       <div class="msg" id="painel-msg"></div>
       <button class="btn primary" id="btn-salvar-painel">Adicionar painel</button>
       <button class="btn outline" id="btn-cancelar-painel" style="display:none;">Cancelar edicao</button>
@@ -291,7 +291,7 @@
       id: id || crypto.randomUUID(),
       nome: painelNomeInput.value.trim(),
       descricao: painelDescInput.value.trim(),
-      url: painelUrlInput.value.trim() || `painel-demo.html?cliente=${encodeURIComponent(painelNomeInput.value.trim().toLowerCase())}`,
+      url: painelUrlInput.value.trim(),
       inicial: (painelNomeInput.value.trim().charAt(0) || 'P').toUpperCase()
     };
     if (!payload.nome || !payload.url) {

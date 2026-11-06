@@ -174,8 +174,7 @@
   function normalizarPainel(painel) {
     return {
       ...painel,
-      inicial: painel.inicial || (painel.nome || 'P').trim().charAt(0).toUpperCase(),
-      url: painel.url || `painel-demo.html?cliente=${encodeURIComponent(painel.id || painel.nome || 'demo')}`
+      inicial: painel.inicial || (painel.nome || 'P').trim().charAt(0).toUpperCase()
     };
   }
 

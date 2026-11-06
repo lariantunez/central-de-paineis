@@ -22,7 +22,7 @@ Cada painel nascia como um projeto separado, com o próprio endereço. Os links 
 
 - **Dados fora da tela:** os painéis vivem em `app/data/paineis.json`, não no HTML.
 - **A página nunca fica vazia:** a home procura a lista no navegador, depois no JSON publicado e, por último, numa lista de reserva escrita no próprio código.
-- **Campos mínimos, o resto deduzido:** sem inicial, usa a primeira letra do nome; sem URL, aponta para o painel demonstrativo.
+- **Campos mínimos, o resto deduzido:** sem inicial, usa a primeira letra do nome; nome e URL são obrigatórios no cadastro.
 - Links externos abrem em nova aba com `noopener noreferrer`.
 
 ## Stack
@@ -34,7 +34,7 @@ HTML, CSS e JavaScript puro, sem framework e sem etapa de build · JSON · local
 | Caminho | Conteúdo |
 |---|---|
 | `index.html` e `assets/` | Estudo de caso do projeto |
-| `app/` | A central: `index.html`, `admin.html`, `painel-demo.html`, `reset-senha.html` e `data/paineis.json` |
+| `app/` | A central: `index.html`, `admin.html`, `reset-senha.html` e `data/paineis.json` |
 | `404.html` | Redireciona endereços antigos para `app/` |
 
 ## Rodar localmente

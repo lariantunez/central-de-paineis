@@ -73,9 +73,8 @@
           <li><a href="#c03"><b>03</b>A home</a></li>
           <li><a href="#c04"><b>04</b>Administração</a></li>
           <li><a href="#c05"><b>05</b>Acesso</a></li>
-          <li><a href="#c06"><b>06</b>Painel demo</a></li>
-          <li><a href="#c07"><b>07</b>Deploy</a></li>
-          <li><a href="#c08"><b>08</b>Produção e demo</a></li>
+          <li><a href="#c06"><b>06</b>Deploy</a></li>
+          <li><a href="#c07"><b>07</b>Produção e demo</a></li>
         </ol>
       </aside>
 
@@ -100,7 +99,7 @@
           <p>Ela apenas lê uma lista e desenha um cartão para cada item. Essa separação guiou o resto do projeto:</p>
           <div class="grade g2 revelar">
             <div class="cartao"><span class="num">01</span><h4>Dados fora da tela</h4><p>Os painéis vivem em uma lista (<code>data/paineis.json</code>), não no HTML. Acrescentar um painel é acrescentar um item.</p></div>
-            <div class="cartao"><span class="num">02</span><h4>Campos mínimos, o resto deduzido</h4><p>Sem inicial, a home usa a primeira letra do nome. Sem URL, o cartão aponta para o painel demonstrativo daquele cliente.</p></div>
+            <div class="cartao"><span class="num">02</span><h4>Campos mínimos, o resto deduzido</h4><p>Sem inicial, a home usa a primeira letra do nome. Nome e URL são exigidos no cadastro, então todo cartão leva a um painel real.</p></div>
             <div class="cartao"><span class="num">03</span><h4>A página nunca fica vazia</h4><p>Se o arquivo de dados não carregar, a home usa uma lista de reserva escrita no próprio código.</p></div>
             <div class="cartao"><span class="num">04</span><h4>Nada real na demonstração</h4><p>Sem login, sem e-mail e sem banco. As edições ficam só no navegador de quem testa, e os administradores são fictícios.</p></div>
           </div>
@@ -110,7 +109,7 @@
         <section class="capitulo" id="c02">
           <span class="rotulo-cap">02 · Os dados</span>
           <h2>Cinco campos descrevem um painel.</h2>
-          <p>O arquivo <code>data/paineis.json</code> é uma lista simples. Cada painel tem cinco campos, e só o nome é indispensável para o cartão aparecer:</p>
+          <p>O arquivo <code>data/paineis.json</code> é uma lista simples. Cada painel tem cinco campos; nome e URL são obrigatórios:</p>
           <div class="tabela-rolagem revelar">
             <table class="tabela">
               <thead><tr><th>Campo</th><th>O que guarda</th><th>Se estiver vazio</th></tr></thead>
@@ -118,7 +117,7 @@
                 <tr><td><code>id</code></td><td>Identificador do painel</td><td>No cadastro, é gerado com <code>crypto.randomUUID()</code></td></tr>
                 <tr><td><code>nome</code></td><td>Título do cartão</td><td><span class="alerta">Obrigatório</span> no formulário de administração</td></tr>
                 <tr><td><code>descricao</code></td><td>Uma frase sobre o que o painel mostra</td><td>O cartão exibe um texto padrão</td></tr>
-                <tr><td><code>url</code></td><td>Endereço do painel</td><td>Aponta para <code>painel-demo.html?cliente=&lt;id&gt;</code></td></tr>
+                <tr><td><code>url</code></td><td>Endereço do painel</td><td><span class="alerta">Obrigatório</span> no formulário de administração</td></tr>
                 <tr><td><code>inicial</code></td><td>Letra do ícone do cartão</td><td>Primeira letra do nome, em maiúscula</td></tr>
               </tbody>
             </table>
@@ -135,7 +134,7 @@
               <g class="no fato"><rect x="355" y="40" width="250" height="58" rx="10"/><text x="480" y="64" text-anchor="middle">1º · localStorage</text><text class="sub" x="480" y="84" text-anchor="middle">lista editada neste navegador</text></g>
               <g class="no dim"><rect x="355" y="150" width="250" height="58" rx="10"/><text x="480" y="174" text-anchor="middle">2º · data/paineis.json</text><text class="sub" x="480" y="194" text-anchor="middle">lista publicada no site</text></g>
               <g class="no"><rect x="355" y="260" width="250" height="58" rx="10"/><text x="480" y="284" text-anchor="middle">3º · lista de reserva</text><text class="sub" x="480" y="304" text-anchor="middle">escrita no próprio index.html</text></g>
-              <g class="no"><rect x="690" y="121" width="240" height="58" rx="10"/><text x="810" y="145" text-anchor="middle">normalizarPainel()</text><text class="sub" x="810" y="165" text-anchor="middle">completa inicial e URL</text></g>
+              <g class="no"><rect x="690" y="121" width="240" height="58" rx="10"/><text x="810" y="145" text-anchor="middle">normalizarPainel()</text><text class="sub" x="810" y="165" text-anchor="middle">completa a inicial</text></g>
               <g class="no fato"><rect x="690" y="260" width="240" height="58" rx="10"/><text x="810" y="284" text-anchor="middle">cartões da home</text><text class="sub" x="810" y="304" text-anchor="middle">um por painel</text></g>
             </svg>
             <figcaption>A administração grava no navegador; a home dá prioridade a essa versão, depois ao JSON publicado e, por último, à lista de reserva.</figcaption>
@@ -149,7 +148,7 @@
           <p>A home é uma página só, com um título, o link para a administração e uma grade que se ajusta à largura da tela (<code>auto-fit</code>, cartões de no mínimo 260 px). O JavaScript lê a lista e cria cada cartão:</p>
           <div class="etapas revelar">
             <div class="etapa"><div><h4>Carrega a lista</h4><p>navegador, JSON ou reserva, nessa ordem</p></div></div>
-            <div class="etapa"><div><h4>Completa o que faltar</h4><p>inicial a partir do nome e URL do painel demonstrativo quando não houver endereço</p></div></div>
+            <div class="etapa"><div><h4>Completa o que faltar</h4><p>inicial a partir do nome, quando não houver</p></div></div>
             <div class="etapa"><div><h4>Desenha o cartão</h4><p>ícone com a inicial, nome, descrição e “Acessar painel”</p></div></div>
             <div class="etapa"><div><h4>Decide como abrir</h4><p>links externos (<code>http</code> ou <code>https</code>) abrem em nova aba, com <code>noopener noreferrer</code>; links internos abrem na mesma aba</p></div></div>
           </div>
@@ -194,25 +193,7 @@
 
         <!-- 06 -->
         <section class="capitulo" id="c06">
-          <span class="rotulo-cap">06 · Painel demo</span>
-          <h2>Um painel de exemplo para qualquer cartão.</h2>
-          <p>Quando um painel é cadastrado sem URL, o cartão aponta para <code>painel-demo.html?cliente=&lt;nome&gt;</code>. Esse painel lê o nome do cliente no endereço, usa-o como título e monta um dashboard com números fictícios, sem servidor e sem banco.</p>
-          <div class="grade g4 revelar">
-            <div class="cartao azul"><h4>3 filtros</h4><p>Período (30, 60 ou 90 dias), canal e regional.</p></div>
-            <div class="cartao verde"><h4>4 indicadores</h4><p>Receita, pedidos, meta e arquivos OK.</p></div>
-            <div class="cartao ambar"><h4>3 abas</h4><p>Vendas, metas e arquivos, cada uma com gráfico e tabela.</p></div>
-            <div class="cartao violeta"><h4>Gráficos em CSS</h4><p>Barras desenhadas com HTML e CSS, sem biblioteca de gráficos.</p></div>
-          </div>
-          <p>Os filtros funcionam de verdade: cada combinação aplica um multiplicador sobre a série base, e indicadores, gráficos e tabelas são recalculados a cada mudança.</p>
-          <figure class="diagrama revelar">
-            <img src="assets/central-painel-demo.jpg" alt="Painel demonstrativo: filtros de período, canal e regional, quatro indicadores, abas Vendas, Metas e Arquivos, gráfico de sell out por mês e tabela de regiões" loading="lazy" width="1440" height="900">
-            <figcaption>Painel demonstrativo aberto com <code>?cliente=demonstracao</code>.</figcaption>
-          </figure>
-        </section>
-
-        <!-- 07 -->
-        <section class="capitulo" id="c07">
-          <span class="rotulo-cap">07 · Deploy</span>
+          <span class="rotulo-cap">06 · Deploy</span>
           <h2>Enviou para a main, está no ar.</h2>
           <p>A publicação no GitHub Pages é feita por um workflow do GitHub Actions (<code>.github/workflows/pages.yml</code>). Ele roda a cada envio para a branch <code>main</code> ou manualmente, e publica a pasta inteira do repositório:</p>
           <div class="etapas revelar">
@@ -228,9 +209,9 @@
           </div>
         </section>
 
-        <!-- 08 -->
-        <section class="capitulo" id="c08">
-          <span class="rotulo-cap">08 · Produção e demonstração</span>
+        <!-- 07 -->
+        <section class="capitulo" id="c07">
+          <span class="rotulo-cap">07 · Produção e demonstração</span>
           <h2>Em produção com login; aqui, no navegador.</h2>
           <div class="arquitetura revelar">
             <div class="caixa"><span class="tag">GitHub</span><b>Repositório</b><ul><li>páginas e <code>paineis.json</code></li><li>workflow do Pages</li></ul></div>
@@ -239,7 +220,7 @@
             <div class="seta">→</div>
             <div class="caixa"><span class="tag">Navegador</span><b>Central</b><ul><li>cartões e administração</li><li>edições no <code>localStorage</code></li></ul></div>
           </div>
-          <p>Esta demonstração tem as mesmas telas do projeto original: home com os cartões, administração com painéis e administradores e o painel de exemplo. O que mudou foi o acesso, que ficou livre, e o armazenamento, que passou para o navegador. Os cartões levam aos outros painéis do portfólio, também publicados com dados fictícios.</p>
+          <p>Esta demonstração tem as mesmas telas do projeto original: home com os cartões e administração com painéis e administradores. O que mudou foi o acesso, que ficou livre, e o armazenamento, que passou para o navegador. Os cartões levam aos outros painéis do portfólio, também publicados com dados fictícios.</p>
           <h3>Tecnologias</h3>
           <div class="pilulas">
             <span>HTML</span><span>CSS (grid, backdrop-filter)</span><span>JavaScript sem framework</span><span>Fetch API</span><span>localStorage</span><span>JSON</span><span>GitHub Actions</span><span>GitHub Pages</span>
@@ -247,7 +228,7 @@
           <div class="encerramento revelar">
             <span class="rotulo-cap">Experimente</span>
             <h2>Cadastre um painel e veja o cartão aparecer na home.</h2>
-            <p class="texto">Sugestão de roteiro: abra a central, clique em “Administrar painéis” e cadastre um painel só com o nome. Volte para a home: o cartão novo tem a inicial calculada e abre o painel demonstrativo com esse nome.</p>
+            <p class="texto">Sugestão de roteiro: abra a central, clique em “Administrar painéis” e cadastre um painel com nome e URL. Volte para a home: o cartão novo aparece com a inicial calculada e abre o endereço informado.</p>
             <div class="acoes"><a class="btn primario" href="app/">Abrir a central →</a><a class="btn" href="https://github.com/lariantunez/central-de-paineis">Ver o código</a></div>
           </div>
         </section>

@@ -73,9 +73,8 @@
           <li><a href="#c03"><b>03</b>The home page</a></li>
           <li><a href="#c04"><b>04</b>Administration</a></li>
           <li><a href="#c05"><b>05</b>Access</a></li>
-          <li><a href="#c06"><b>06</b>Demo dashboard</a></li>
-          <li><a href="#c07"><b>07</b>Deployment</a></li>
-          <li><a href="#c08"><b>08</b>Production and demo</a></li>
+          <li><a href="#c06"><b>06</b>Deployment</a></li>
+          <li><a href="#c07"><b>07</b>Production and demo</a></li>
         </ol>
       </aside>
 
@@ -100,7 +99,7 @@
           <p>It just reads a list and draws a card for each item. That separation guided the rest of the project:</p>
           <div class="grade g2 revelar">
             <div class="cartao"><span class="num">01</span><h4>Data outside the page</h4><p>The dashboards live in a list (<code>data/paineis.json</code>), not in the HTML. Adding a dashboard means adding an item.</p></div>
-            <div class="cartao"><span class="num">02</span><h4>Minimal fields, the rest inferred</h4><p>Without an initial, the home page uses the first letter of the name. Without a URL, the card points to that client's demo dashboard.</p></div>
+            <div class="cartao"><span class="num">02</span><h4>Minimal fields, the rest inferred</h4><p>Without an initial, the home page uses the first letter of the name. Name and URL are required when adding a dashboard, so every card leads to a real one.</p></div>
             <div class="cartao"><span class="num">03</span><h4>The page is never empty</h4><p>If the data file fails to load, the home page uses a fallback list written into the code itself.</p></div>
             <div class="cartao"><span class="num">04</span><h4>Nothing real in the demo</h4><p>No login, no email, and no database. Edits stay only in the tester's browser, and the administrators are fictional.</p></div>
           </div>
@@ -110,7 +109,7 @@
         <section class="capitulo" id="c02">
           <span class="rotulo-cap">02 · The data</span>
           <h2>Five fields describe a dashboard.</h2>
-          <p>The <code>data/paineis.json</code> file is a simple list. Each dashboard has five fields, and only the name is required for the card to appear:</p>
+          <p>The <code>data/paineis.json</code> file is a simple list. Each dashboard has five fields; name and URL are required:</p>
           <div class="tabela-rolagem revelar">
             <table class="tabela">
               <thead><tr><th>Field</th><th>What it stores</th><th>If empty</th></tr></thead>
@@ -118,7 +117,7 @@
                 <tr><td><code>id</code></td><td>Dashboard identifier</td><td>Generated with <code>crypto.randomUUID()</code> on creation</td></tr>
                 <tr><td><code>nome</code></td><td>Card title</td><td><span class="alerta">Required</span> in the admin form</td></tr>
                 <tr><td><code>descricao</code></td><td>A sentence about what the dashboard shows</td><td>The card displays default text</td></tr>
-                <tr><td><code>url</code></td><td>Dashboard address</td><td>Points to <code>painel-demo.html?cliente=&lt;id&gt;</code></td></tr>
+                <tr><td><code>url</code></td><td>Dashboard address</td><td><span class="alerta">Required</span> in the admin form</td></tr>
                 <tr><td><code>inicial</code></td><td>Letter on the card icon</td><td>First letter of the name, uppercase</td></tr>
               </tbody>
             </table>
@@ -135,7 +134,7 @@
               <g class="no fato"><rect x="355" y="40" width="250" height="58" rx="10"/><text x="480" y="64" text-anchor="middle">1st · localStorage</text><text class="sub" x="480" y="84" text-anchor="middle">list edited in this browser</text></g>
               <g class="no dim"><rect x="355" y="150" width="250" height="58" rx="10"/><text x="480" y="174" text-anchor="middle">2nd · data/paineis.json</text><text class="sub" x="480" y="194" text-anchor="middle">list published on the site</text></g>
               <g class="no"><rect x="355" y="260" width="250" height="58" rx="10"/><text x="480" y="284" text-anchor="middle">3rd · fallback list</text><text class="sub" x="480" y="304" text-anchor="middle">written into index.html itself</text></g>
-              <g class="no"><rect x="690" y="121" width="240" height="58" rx="10"/><text x="810" y="145" text-anchor="middle">normalizarPainel()</text><text class="sub" x="810" y="165" text-anchor="middle">fills in initial and URL</text></g>
+              <g class="no"><rect x="690" y="121" width="240" height="58" rx="10"/><text x="810" y="145" text-anchor="middle">normalizarPainel()</text><text class="sub" x="810" y="165" text-anchor="middle">fills in the initial</text></g>
               <g class="no fato"><rect x="690" y="260" width="240" height="58" rx="10"/><text x="810" y="284" text-anchor="middle">home page cards</text><text class="sub" x="810" y="304" text-anchor="middle">one per dashboard</text></g>
             </svg>
             <figcaption>The admin area saves to the browser; the home page gives priority to that version, then to the published JSON, and lastly to the fallback list.</figcaption>
@@ -149,7 +148,7 @@
           <p>The home page is a single page with a title, the link to the admin area, and a grid that adapts to the screen width (<code>auto-fit</code>, cards at least 260 px wide). JavaScript reads the list and creates each card:</p>
           <div class="etapas revelar">
             <div class="etapa"><div><h4>Loads the list</h4><p>browser, JSON, or fallback, in that order</p></div></div>
-            <div class="etapa"><div><h4>Fills in what's missing</h4><p>initial from the name, and the demo dashboard URL when there is no address</p></div></div>
+            <div class="etapa"><div><h4>Fills in what's missing</h4><p>initial from the name, when missing</p></div></div>
             <div class="etapa"><div><h4>Draws the card</h4><p>icon with the initial, name, description, and “Acessar painel” (Open dashboard)</p></div></div>
             <div class="etapa"><div><h4>Decides how to open it</h4><p>external links (<code>http</code> or <code>https</code>) open in a new tab, with <code>noopener noreferrer</code>; internal links open in the same tab</p></div></div>
           </div>
@@ -194,25 +193,7 @@
 
         <!-- 06 -->
         <section class="capitulo" id="c06">
-          <span class="rotulo-cap">06 · Demo dashboard</span>
-          <h2>A sample dashboard for any card.</h2>
-          <p>When a dashboard is added without a URL, the card points to <code>painel-demo.html?cliente=&lt;nome&gt;</code>. That dashboard reads the client name from the address, uses it as the title, and builds a dashboard with fictional numbers, with no server and no database.</p>
-          <div class="grade g4 revelar">
-            <div class="cartao azul"><h4>3 filters</h4><p>Period (30, 60, or 90 days), channel, and region.</p></div>
-            <div class="cartao verde"><h4>4 indicators</h4><p>Revenue, orders, target, and files OK.</p></div>
-            <div class="cartao ambar"><h4>3 tabs</h4><p>Sales, targets, and files, each with a chart and a table.</p></div>
-            <div class="cartao violeta"><h4>CSS charts</h4><p>Bars drawn with HTML and CSS, with no charting library.</p></div>
-          </div>
-          <p>The filters really work: each combination applies a multiplier to the base series, and indicators, charts, and tables are recalculated on every change.</p>
-          <figure class="diagrama revelar">
-            <img src="../assets/central-painel-demo.jpg" alt="Demo dashboard: period, channel, and region filters, four indicators, Sales, Targets, and Files tabs, a monthly sell-out chart, and a table of regions" loading="lazy" width="1440" height="900">
-            <figcaption>Demo dashboard opened with <code>?cliente=demonstracao</code>.</figcaption>
-          </figure>
-        </section>
-
-        <!-- 07 -->
-        <section class="capitulo" id="c07">
-          <span class="rotulo-cap">07 · Deployment</span>
+          <span class="rotulo-cap">06 · Deployment</span>
           <h2>Pushed to main, it's live.</h2>
           <p>Publishing to GitHub Pages is handled by a GitHub Actions workflow (<code>.github/workflows/pages.yml</code>). It runs on every push to the <code>main</code> branch or manually, and publishes the entire repository folder:</p>
           <div class="etapas revelar">
@@ -228,9 +209,9 @@
           </div>
         </section>
 
-        <!-- 08 -->
-        <section class="capitulo" id="c08">
-          <span class="rotulo-cap">08 · Production and demo</span>
+        <!-- 07 -->
+        <section class="capitulo" id="c07">
+          <span class="rotulo-cap">07 · Production and demo</span>
           <h2>In production with a login; here, in the browser.</h2>
           <div class="arquitetura revelar">
             <div class="caixa"><span class="tag">GitHub</span><b>Repository</b><ul><li>pages and <code>paineis.json</code></li><li>Pages workflow</li></ul></div>
@@ -239,7 +220,7 @@
             <div class="seta">→</div>
             <div class="caixa"><span class="tag">Browser</span><b>Hub</b><ul><li>cards and administration</li><li>edits in <code>localStorage</code></li></ul></div>
           </div>
-          <p>This demo has the same screens as the original project: the home page with the cards, the admin area with dashboards and administrators, and the sample dashboard. What changed is access, which is now open, and storage, which moved to the browser. The cards lead to the other dashboards in the portfolio, also published with fictional data.</p>
+          <p>This demo has the same screens as the original project: the home page with the cards and the admin area with dashboards and administrators. What changed is access, which is now open, and storage, which moved to the browser. The cards lead to the other dashboards in the portfolio, also published with fictional data.</p>
           <h3>Technologies</h3>
           <div class="pilulas">
             <span>HTML</span><span>CSS (grid, backdrop-filter)</span><span>Framework-free JavaScript</span><span>Fetch API</span><span>localStorage</span><span>JSON</span><span>GitHub Actions</span><span>GitHub Pages</span>
@@ -247,7 +228,7 @@
           <div class="encerramento revelar">
             <span class="rotulo-cap">Try it</span>
             <h2>Add a dashboard and watch the card appear on the home page.</h2>
-            <p class="texto">Suggested walkthrough: open the hub, click “Administrar painéis” (Manage dashboards), and add a dashboard with just a name. Go back to the home page: the new card has its initial filled in and opens the demo dashboard with that name.</p>
+            <p class="texto">Suggested walkthrough: open the hub, click “Administrar painéis” (Manage dashboards), and add a dashboard with a name and URL. Go back to the home page: the new card appears with its initial filled in and opens the address you entered.</p>
             <div class="acoes"><a class="btn primario" href="../app/">Open the hub →</a><a class="btn" href="https://github.com/lariantunez/central-de-paineis">View the code</a></div>
           </div>
         </section>
