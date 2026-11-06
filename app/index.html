@@ -195,7 +195,7 @@
 
   carregarPaineis().then(paineis => {
     grid.innerHTML = '';
-    paineis.forEach(painel => {
+    paineis.filter(painel => painel.url).forEach(painel => {
       const a = document.createElement('a');
       a.className = 'card';
       a.href = painel.url;
